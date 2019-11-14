@@ -1,0 +1,311 @@
+<style>
+
+/* WCE MESSAGES EDIT PAGE
+--------------------- */
+
+th.column-messageid,
+td.column-messageid {
+    width: 3em !important;
+}
+
+/* WOO PRODUCT EDIT PAGE
+--------------------- */
+
+#woocommerce-product-data ul.wc-tabs li.woo-custom-emails_options a:before {
+    font-family: WooCommerce;
+    content: '\e02d';
+}
+
+#woocommerce-product-data #woo_custom_emails_product_data textarea {
+    height: 170px;
+}
+
+#woocommerce-product-data #woo_custom_emails_product_data textarea#custom_content {
+    min-height: 170px;
+    font-size: 12px;
+    font-family: 'Courier', serif;
+    line-height: normal;
+}
+
+#old-customcontent-meta {
+    font-family: 'Courier New', serif;
+    font-size: 12px;
+    line-height: normal;
+}
+
+.button.show-oldcustomcontent,
+.button.hide-oldcustomcontent {
+    padding: 4px 7px;
+    line-height: 20px;
+    font-size: 10px;
+    height: auto;
+}
+
+.wcemessage_search_results_field {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    padding: 5px 20px 5px 162px !important;
+}
+
+.wcemessage_search_results_field .wcemessage_search_results {
+    display: inline-block;
+    position: relative;
+    overflow-y: scroll;
+    width: 90%;
+    height: 100px;
+    border: 1px solid #ddd;
+}
+
+.wcemessage_search_results_field .wcemessage_search_results .wcemessage_search_results_wrap {
+    overflow: hidden;
+}
+
+.wcemessage_search_results_field .wcemessage_search_results p {
+    margin-top: 0;
+    margin-bottom: 2px;
+    padding: 0;
+}
+
+.wcemessage_search_results_wrap p:hover {
+    background: #eee;
+}
+
+.wcemessage_search_results_field .wcemessage_search_results p a {
+    display: block;
+    padding: 5px;
+    font-size: 11px;
+    background: #f4f4f4;
+}
+
+.wcemessage_search_results_field .wcemessage_search_results .placeholder {
+    background: #fff;
+    color: #ccc;
+    padding: 5px;
+    font-style: italic;
+    margin-right: 1px;
+}
+
+.wcemessage_search_results_field .wcemessage_search_results .placeholder.error,
+.wcemessage_search_results_field .wcemessage_search_results .placeholder.error a {
+    color: #ff0000;
+    line-height: normal;
+}
+
+.wcemessage_search_results_field .wcemessage_search_results .placeholder.error a {
+    display: inline;
+    padding: 0;
+    background: none;
+}
+
+input#wcemessage_search {
+    padding: 6px;
+}
+
+input#wcemessage_search::placeholder {
+    font-size: 12px;
+    color: #999;
+    line-height: normal;
+}
+
+.wcemessage_search_saved {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 24px;
+    color: #0073aa;
+}
+
+.wcemessage_search_saved .just-added {
+    color: #00a651;
+    font-style: italic;
+}
+
+.wcemessage_search_saved .color-gray {
+    color: #aaa;
+}
+
+.wcemessage_controls {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 2px;
+}
+
+.wcemessage_controls .button {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+#woo_custom_emails_product_data .button .dashicons {
+    line-height: inherit;
+}
+
+.wcemessage_controls .button.remove-wcemessage {
+    color: #ff0000;
+    margin-left: 10px;
+}
+
+.wcemessage_controls .button.select-wcemessage {
+    display: inline-block;
+}
+
+.wcemessage_search_results_field .button.cancel-select-wcemessage {
+    padding: 4px 7px;
+    line-height: 20px;
+    font-size: 11px;
+    height: auto;
+}
+
+.wcemessage_controls .hidden,
+.wcemessage_search_results_field.hidden,
+.wce-product-options-table .hidden {
+    display: none !important;
+}
+
+/* 2.2.0 */
+.wce-product-options-table {
+    margin: 13px;
+}
+
+.wce-product-options-table .table-header,
+.wce-product-options-table .table-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.wce-product-options-table .table-header {
+    border: 1px solid #e1e1e1;
+}
+
+.wce-product-options-table > :nth-child(even):not(.table-header) {
+    background-color: #f9f9f9;
+}
+
+.wce-product-options-table .status {
+    flex: 0 0 110px;
+    padding-right: 30px;
+}
+
+.wce-product-options-table .message {
+    width: 100%;
+    padding-right: 30px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.wce-product-options-table .message > .form-field {
+    width: 100%;
+}
+
+.wce-product-options-table .message > .form-field input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    cursor: text;
+}
+
+.wce-product-options-table .message > .form-field input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #999 !important;
+}
+.wce-product-options-table .message > .form-field input::-moz-placeholder { /* Firefox 19+ */
+  color: #999 !important;
+}
+.wce-product-options-table .message > .form-field input:-ms-input-placeholder { /* IE 10+ */
+  color: #999 !important;
+}
+.wce-product-options-table .message > .form-field input:-moz-placeholder { /* Firefox 18- */
+  color: #999 !important;
+}
+
+.wce-product-options-table .message .wcemessage_search_results {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: calc(100% - 100px);
+    max-height: 180px;
+    overflow-y: auto;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    z-index: 99;
+}
+
+.wce-product-options-table .message #wcemessage_processing_search_results {
+    max-height: 120px;
+}
+
+.wce-product-options-table .message #wcemessage_completed_search_results {
+    bottom: 30px;
+    top: auto;
+}
+
+.wce-product-options-table .message .wcemessage_search_results .placeholder {
+    margin: 0;
+    padding: 8px;
+}
+
+a.wce-search-result {
+    display: block;
+}
+
+.wce-product-options-table .message .button-container {
+    flex: 0 0 70px;
+    margin-left: 10px;
+}
+
+.wce-product-options-table .message .button-container .button {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    text-align: center;
+    color: #fff;
+    border: none;
+    box-shadow: none;
+}
+
+.wce-product-options-table .message .button-container .button.edit-wcemessage {
+    background-color: #5badeb;
+    margin-left: 5px;
+}
+
+.wce-product-options-table .message .button-container .button.edit-wcemessage:hover {
+    background-color: #4887b8;
+}
+
+.wce-product-options-table .message .button-container .button.remove-wcemessage {
+    background-color: #da4d4d;
+}
+
+.wce-product-options-table .message .button-container .button.remove-wcemessage:hover {
+    background-color: #a63a3a;
+}
+
+.wce-product-options-table .location {
+    width: 66%;
+}
+
+.wce-product-options-table .location select {
+    width: 100%;
+}
+
+.wce-product-options-table .location p.form-field {
+    padding-left: 0 !important;
+}
+
+.wce-product-options-table .location p.form-field > label {
+    display: none;
+}
+
+.fullwidth-text {
+    width: 100%;
+}
+
+</style>
