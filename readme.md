@@ -1,4 +1,4 @@
-# woo_custom_emails_per_product
+# Woo Custom Emails Per Product
 
 > Easily add custom content for each product into the default WooCommerce customer receipt emails.
 
@@ -61,54 +61,61 @@ For WooCustomEmails version 1.x, the following HTML tags are allowed in the "Cus
 ### Something Else?
 If you are having any issues, please post in the Support Forum.
 
+If you find a bug, please report it on GitHub:
+https://github.com/alexmustin/woocustomemails/issues/new/choose
+
 ## Changelog
 
+### 2.2.3 - (Nov 14, 2019)
+* Adds: Adds compatibility for WordPress 5.3
+* Fixes: Fixes error: Custom Email Message shown in Admin email
+
 ### 2.2.2 - (Jan 11, 2019)
-* Fix: Fixes error: "in_array() expects parameter 2 to be array, boolean given"
+* Fixes: Fixes error: "in_array() expects parameter 2 to be array, boolean given"
 
 ### 2.2.1 - (Dec 27, 2018)
-* Fix: Adds compatibility for WordPress 5.02 and WooCommerce 3.5.3
+* Fixes: Adds compatibility for WordPress 5.02 and WooCommerce 3.5.3
 
 ### 2.2.0 - (Jul 9, 2018)
-* New: Now assign a Custom Email Message for all 3 of the default Order Status emails! The plugin is backwards-compatible, so you will see your email settings from previous versions automatically applied.
-* Fix: Fixed a CSS issue on the WCE Messages Admin Page.
+* Adds: Now assign a Custom Email Message for all 3 of the default Order Status emails! The plugin is backwards-compatible, so you will see your email settings from previous versions automatically applied.
+* Fixes: Fixed a CSS issue on the WCE Messages Admin Page.
 
 ### 2.1.4 - (Apr 11, 2018)
-* Fix: Fixed issue where error messages were displaying in emails under certain circumstances.
+* Fixes: Fixed issue where error messages were displaying in emails under certain circumstances.
 
 ### 2.1.3 - (Mar 21, 2018)
-* Fix: Fixed issue where no messages were displaying in emails.
+* Fixes: Fixed issue where no messages were displaying in emails.
 
 ### 2.1.2 - (Mar 6, 2018)
-* Fix: Fixed issue where "Warning:" error message was showing in emails.
+* Fixes: Fixed issue where "Warning:" error message was showing in emails.
 
 ### 2.1.1 - (Feb 26, 2018)
-* Fix: Fixed issue with Variable Products not saving Custom Messages.
+* Fixes: Fixed issue with Variable Products not saving Custom Messages.
 
 ### 2.1.0 - (Feb 13, 2018)
-* New: Adds a new 'WCE Settings' page under the 'Custom Emails' admin menu.
-* New: New Settings option: "Show Version 1x Content" -- Adds a new "Show Content" button in the Product Data "Custom Emails" Tab -- click this button to display your old Version 1.x Custom Content, so you can Copy/Paste it into a new WCE Message.
-* New: New Settings option: "Extra Display Classes" -- Allows you to specify the extra WooCommerce product classes assigned to the 'Custom Emails' Product Data Tab. Example: "Bookings": show_if_booking
-* Fix: "After Order Meta" and "After Customer Details" settings have been updated so the content will appear in the expected location inside the email.
+* Adds: Adds a new 'WCE Settings' page under the 'Custom Emails' admin menu.
+* Adds: New Settings option: "Show Version 1x Content" -- Adds a new "Show Content" button in the Product Data "Custom Emails" Tab -- click this button to display your old Version 1.x Custom Content, so you can Copy/Paste it into a new WCE Message.
+* Adds: New Settings option: "Extra Display Classes" -- Allows you to specify the extra WooCommerce product classes assigned to the 'Custom Emails' Product Data Tab. Example: "Bookings": show_if_booking
+* Fixes: "After Order Meta" and "After Customer Details" settings have been updated so the content will appear in the expected location inside the email.
 
 ### 2.0.0 - (Feb 11, 2018)
-* New: Adds a new Custom Post Type for you to create your Custom Email Messages.
-* New: Moves WooCustomEmails fields into its own Tab in the Product Data section.
-* New: AJAX Live Search to quickly and easily find your Custom Email Messages.
-* Fix: No more duplicate messages in emails!
+* Adds: Adds a new Custom Post Type for you to create your Custom Email Messages.
+* Adds: Moves WooCustomEmails fields into its own Tab in the Product Data section.
+* Adds: AJAX Live Search to quickly and easily find your Custom Email Messages.
+* Fixes: No more duplicate messages in emails!
 
 ### 1.0.5 - (Jan 16, 2018)
-* Fix: Fixes error message: 'Fatal error: Cannot redeclare woo_custom_emails_output_message()'
+* Fixes: Fixes error message: 'Fatal error: Cannot redeclare woo_custom_emails_output_message()'
 
 ### 1.0.4 - (Dec 9, 2017)
-* New: Added option to choose which Customer Order Status Email the content will appear in. Choose from "Processing," "On-Hold," or "Complete" status emails.
-* Fix: Added support for br tags
+* Adds: Added option to choose which Customer Order Status Email the content will appear in. Choose from "Processing," "On-Hold," or "Complete" status emails.
+* Fixes: Added support for br tags
 
 ### 1.0.3 - (Sept 8, 2017)
-* Fix: Fixed issue of PHP code showing in the admin area
+* Fixes: Fixed issue of PHP code showing in the admin area
 
 ### 1.0.2 - (Sept 5, 2017)
-* Fix: Added support for "align" attribute in img tags
+* Fixes: Added support for "align" attribute in img tags
 
 ### 1.0.1 - (Jul 6, 2017)
 * First release!
