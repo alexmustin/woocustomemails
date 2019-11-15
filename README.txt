@@ -87,7 +87,7 @@ If you are having any issues, please post in the Support Forum.
 
 = 2.2.3 - (Nov 14, 2019) =
 * Adds: Adds compatibility for WordPress 5.3
-* Fixes: Fixes error: Custom Email Message shown in Admin email
+* Fixes: Stops the Custom Email Message from being shown in the Admin "New Order" email
 
 = 2.2.2 - (Jan 11, 2019) =
 * Fixes: Fixes error: "in_array() expects parameter 2 to be array, boolean given"
