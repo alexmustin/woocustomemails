@@ -6,8 +6,8 @@ Donate link: https://venmo.com/Alex-Mustin
 Tags: email, template, product, receipt, woo, woocommerce
 Requires at least: 4.9.9
 Tested up to: 5.3
-Stable tag: 2.2.3
-Version: 2.2.3
+Stable tag: 2.2.4
+Version: 2.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,9 @@ If you are having any issues, please post in the Support Forum.
 7. Product Data tab with 'Show Legacy Content' setting enabled
 
 == Changelog ==
+
+= 2.2.4 - (Nov 29, 2019) =
+* Fixes: Removes the error message: "Cannot redeclare log_message()..."
 
 = 2.2.3 - (Nov 14, 2019) =
 * Adds: Adds compatibility for WordPress 5.3

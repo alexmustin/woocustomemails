@@ -66,6 +66,9 @@ https://github.com/alexmustin/woocustomemails/issues/new/choose
 
 ## Changelog
 
+### 2.2.4 - (Nov 29, 2019)
+* Fixes: Removes the error message: "Cannot redeclare log_message()..."
+
 ### 2.2.3 - (Nov 14, 2019)
 * Adds: Adds compatibility for WordPress 5.3
 * Fixes: Stops the Custom Email Message from being shown in the Admin "New Order" email
