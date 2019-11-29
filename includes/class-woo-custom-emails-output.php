@@ -118,25 +118,27 @@ class Woo_Custom_Emails_Output {
 
 		global $this_order_status_action;
 
-		/**
-		 * Debug logging.
-		 *
-		 * @param string $message The message to be logged.
-		 * @param string $log A string to determine the log type.
-		 */
-		function log_message( $message, $log = 'default' ) {
-			if ( WP_DEBUG_LOG ) {
-				$wc_logger = wc_get_logger();
-				$context = array( 'source' => $log );
-				if ( is_array( $message ) || is_object( $message ) ) {
-					$wc_logger->debug( print_r( $message, true ), $context );
-				} else {
-					$wc_logger->debug( $message, $context );
+		if ( ! function_exists( 'log_message' ) ) {
+			/**
+			 * Debug logging.
+			 *
+			 * @param string $message The message to be logged.
+			 * @param string $log A string to determine the log type.
+			 */
+			function log_message( $message, $log = 'default' ) {
+				if ( WP_DEBUG_LOG ) {
+					$wc_logger = wc_get_logger();
+					$context = array( 'source' => $log );
+					if ( is_array( $message ) || is_object( $message ) ) {
+						$wc_logger->debug( print_r( $message, true ), $context );
+					} else {
+						$wc_logger->debug( $message, $context );
+					}
 				}
 			}
 		}
 
-		log_message( $recipient );
+		// log_message( $recipient ); // log the recipient.
 
 		// Function to output the custom message.
 		if ( ! function_exists( 'woo_custom_emails_output_message' ) ) {
