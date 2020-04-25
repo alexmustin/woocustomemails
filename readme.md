@@ -66,6 +66,9 @@ https://github.com/alexmustin/woocustomemails/issues/new/choose
 
 ## Changelog
 
+### 2.2.5 - (Apr 25, 2020)
+* Update: Compatible with WordPress 5.5 and WooCommerce 4.0.1
+
 ### 2.2.4 - (Nov 29, 2019)
 * Fixes: Removes the error message: "Cannot redeclare log_message()..."
 
