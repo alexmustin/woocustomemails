@@ -8,7 +8,6 @@
  * Text Domain: woo_custom_emails_domain
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
- *
  * WC requires at least: 3.5
  * WC tested up to: 4.7.0
  *

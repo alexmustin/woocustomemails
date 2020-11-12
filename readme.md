@@ -28,7 +28,7 @@ This section describes how to install the plugin and get it working.
 10. Click the name of the Custom Email Message you'd like to use. It will show the Title of the custom message above the Search Box and the text will be Green to indicate you've selected the item.
 11. Select where your custom content will display inside the email, by choosing one of the “Content Location” options.
 12. Publish/Update the Product.
-13. Now, try to purchase one of the products you have customized with this plugin — when you receive the customer email, you will see your custom content showing in the location you’ve chosen.
+13. Now, try to purchase one of the products you have customized with this plugin — when you receive the email, you will see your custom content showing in the location you’ve chosen.
 
 ## Frequently Asked Questions
 

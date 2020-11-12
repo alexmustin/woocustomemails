@@ -5,7 +5,7 @@ Author URI: http://alexmustin.com/
 Donate link: https://venmo.com/Alex-Mustin
 Tags: email, template, product, receipt, woo, woocommerce
 Requires at least: 4.9.9
-Tested up to: 5.6b
+Tested up to: 5.5.3
 Stable tag: 2.2.6
 Version: 2.2.6
 License: GPLv2 or later
@@ -39,7 +39,7 @@ This section describes how to install the plugin and get it working.
 10. Click the name of the Custom Email Message you'd like to use. It will show the Title of the custom message above the Search Box and the text will be Green to indicate you've selected the item.
 11. Select where your custom content will display inside the email, by choosing one of the “Content Location” options.
 12. Publish/Update the Product.
-13. Now, try to purchase one of the products you have customized with this plugin — when you receive the customer email, you will see your custom content showing in the location you’ve chosen.
+13. Now, try to purchase one of the products you have customized with this plugin — when you receive the email, you will see your custom content showing in the location you’ve chosen.
 
 == Frequently Asked Questions ==
 
