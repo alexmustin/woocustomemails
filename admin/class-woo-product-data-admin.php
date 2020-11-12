@@ -37,8 +37,8 @@ class Woo_Product_Data_Admin {
 		$insert_at_position = 2; // position in tab list
 
 		$tabs = array_slice( $original_prodata_tabs, 0, $insert_at_position, true ); // Split the tabs into an array, then keep the first part up until our position number
-	    $tabs = array_merge( $tabs, $new_custom_tab ); // Add our new tab into the array
-	    $tabs = array_merge( $tabs, array_slice( $original_prodata_tabs, $insert_at_position, null, true ) ); // Append the last part of tabs array
+		$tabs = array_merge( $tabs, $new_custom_tab ); // Add our new tab into the array
+		$tabs = array_merge( $tabs, array_slice( $original_prodata_tabs, $insert_at_position, null, true ) ); // Append the last part of tabs array
 
 		return $tabs;
 
@@ -53,7 +53,7 @@ class Woo_Product_Data_Admin {
 	// Setup 'Custom Emails' Product Data tab
 	public function add_woo_custom_emails_tab_fields() {
 
-	    global $post;
+		global $post;
 
 		// Get WCE Settings
 		$this->options = get_option( 'woocustomemails_settings_name' );
@@ -69,23 +69,23 @@ class Woo_Product_Data_Admin {
 		$this_product_id = get_the_ID();
 		$customcontent_meta = get_post_meta( $this_product_id, 'custom_content', true );
 
-	    // Note the 'id' attribute MUST match the 'target' parameter set above
-	    ?>
+		// Note the 'id' attribute MUST match the 'target' parameter set above.
+		?>
 		<div id='woo_custom_emails_product_data' class='panel woocommerce_options_panel'>
 			<?php
-			if ( !empty($show_old_content) ) {
+			if ( ! empty( $show_old_content ) ) {
 			?>
 				<div class='options_group'>
 					<?php
 
 					// Show Legacy v1.x Custom Content
-					if ( !empty ( $customcontent_meta ) ) {
+					if ( ! empty( $customcontent_meta ) ) {
 						?>
 						<p class="form-field old-customcontent">
 							<label for="old-customcontent-meta"><?php echo __( 'Legacy Custom Content:', 'woocommerce' ); ?><br><?php echo __( '(disabled)', 'woocommerce' ); ?></label>
-							<a href="#" class="button show-oldcustomcontent"><span class="dashicons dashicons-visibility"></span> <?php echo __('Show Content','woocommerce'); ?></a>
-							<a href="#" class="button hide-oldcustomcontent hidden"><span class="dashicons dashicons-hidden"></span> <?php echo __('Hide Content','woocommerce'); ?></a>
-							<textarea disabled name="old-customcontent-meta" id="old-customcontent-meta" class="hidden"><?php echo $customcontent_meta; ?></textarea>
+							<a href="#" class="button show-oldcustomcontent"><span class="dashicons dashicons-visibility"></span> <?php echo __('Show Content', 'woocommerce'); ?></a>
+							<a href="#" class="button hide-oldcustomcontent hide"><span class="dashicons dashicons-hidden"></span> <?php echo __('Hide Content', 'woocommerce'); ?></a>
+							<textarea disabled name="old-customcontent-meta" id="old-customcontent-meta" class="hide"><?php echo $customcontent_meta; ?></textarea>
 						<?php
 					}
 
@@ -135,18 +135,18 @@ class Woo_Product_Data_Admin {
 					/*
 					* Reusable function to return the title of a WCE Message
 					*/
-					function getMessageTitle( $msgID = 0, $statusName = '' ){
+					function getMessageTitle( $msgID = 0, $statusName = '' ) {
 
 						$wcemessage_title = get_the_title( $msgID );
 						$editURL = admin_url('post.php?post='.$msgID.'&action=edit');
 						$editBtn = '<a href="'.$editURL.'" target="_blank" class="button edit-wcemessage" alt="'.__('Edit','woocommerce').'" title="'.__('Edit','woocommerce').'"><span class="dashicons dashicons-edit"></span></a>';
 
-						// Check if this message is Published
+						// Check if this message is Published.
 						if ( get_post_status( $msgID ) !== 'publish' ) {
-							// Saved WCE Message is not published, show Invalid message
+							// Saved WCE Message is not published, show Invalid message.
 							$wcemessage_saved_text = '(' . __('Invalid Message Selected', 'woocommerce') . ')';
 						} else {
-							// Saved WCE Message is published
+							// Saved WCE Message is published.
 							$wcemessage_saved_text = $wcemessage_title . '';
 						}
 
@@ -237,7 +237,7 @@ class Woo_Product_Data_Admin {
 
 							}
 							?>
-							<div class="wcemessage_search_results hidden" id="wcemessage_<?php echo $statusName; ?>_search_results">
+							<div class="wcemessage_search_results hide" id="wcemessage_<?php echo $statusName; ?>_search_results">
 								<div class="wcemessage_search_results_wrap">
 									<p class="placeholder"><?php echo __( 'Search results will appear here', 'woocommerce' ); ?></p>
 								</div>
@@ -393,7 +393,7 @@ class Woo_Product_Data_Admin {
 
 			</div>
 
-	    </div>
+		</div>
 		<?php
 	}
 
@@ -402,36 +402,36 @@ class Woo_Product_Data_Admin {
 	?>
 		<script type="text/javascript">
 		function fetch_wce_posts_onhold(){
-		    jQuery.ajax({
-		        url: '<?php echo admin_url('admin-ajax.php'); ?>',
-		        type: 'post',
-		        data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_onhold').val() },
-		        success: function(data) {
-		            jQuery('#wcemessage_onhold_search_results .wcemessage_search_results_wrap').html( data );
-		        }
-		    });
+			jQuery.ajax({
+				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				type: 'post',
+				data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_onhold').val() },
+				success: function(data) {
+					jQuery('#wcemessage_onhold_search_results .wcemessage_search_results_wrap').html( data );
+				}
+			});
 		}
 
 		function fetch_wce_posts_processing(){
-		    jQuery.ajax({
-		        url: '<?php echo admin_url('admin-ajax.php'); ?>',
-		        type: 'post',
-		        data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_processing').val() },
-		        success: function(data) {
-		            jQuery('#wcemessage_processing_search_results .wcemessage_search_results_wrap').html( data );
-		        }
-		    });
+			jQuery.ajax({
+				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				type: 'post',
+				data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_processing').val() },
+				success: function(data) {
+					jQuery('#wcemessage_processing_search_results .wcemessage_search_results_wrap').html( data );
+				}
+			});
 		}
 
 		function fetch_wce_posts_completed(){
-		    jQuery.ajax({
-		        url: '<?php echo admin_url('admin-ajax.php'); ?>',
-		        type: 'post',
-		        data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_completed').val() },
-		        success: function(data) {
-		            jQuery('#wcemessage_completed_search_results .wcemessage_search_results_wrap').html( data );
-		        }
-		    });
+			jQuery.ajax({
+				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				type: 'post',
+				data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_completed').val() },
+				success: function(data) {
+					jQuery('#wcemessage_completed_search_results .wcemessage_search_results_wrap').html( data );
+				}
+			});
 		}
 
 		jQuery(document).ready( function($) {
@@ -455,13 +455,13 @@ class Woo_Product_Data_Admin {
 				e.preventDefault();
 
 				// Hide this button
-				$(this).addClass('hidden');
+				$(this).addClass('hide');
 
 				// Show 'Hide Content' button
-				$('.button.hide-oldcustomcontent.hidden').removeClass('hidden');
+				$('.button.hide-oldcustomcontent.hide').removeClass('hide');
 
 				// Show 'Custom Content' textarea
-				$('#old-customcontent-meta.hidden').removeClass('hidden');
+				$('#old-customcontent-meta.hide').removeClass('hide');
 			});
 
 			// Hide Content button
@@ -470,13 +470,13 @@ class Woo_Product_Data_Admin {
 				e.preventDefault();
 
 				// Hide this button
-				$(this).addClass('hidden');
+				$(this).addClass('hide');
 
 				// Show 'Show Content' button
-				$('.button.show-oldcustomcontent.hidden').removeClass('hidden');
+				$('.button.show-oldcustomcontent.hide').removeClass('hide');
 
 				// Hide 'Custom Content' textarea
-				$('#old-customcontent-meta').addClass('hidden');
+				$('#old-customcontent-meta').addClass('hide');
 			});
 
 			/* ---------------------------- 2.2.0 --------------------------- */
@@ -488,7 +488,7 @@ class Woo_Product_Data_Admin {
 				if ( allHidden !== true ) {
 
 					// Hide all SR boxes
-					$('.wcemessage_search_results').addClass('hidden');
+					$('.wcemessage_search_results').addClass('hide');
 
 					// Assign 'allHidden' var to true
 					allHidden = true;
@@ -498,13 +498,13 @@ class Woo_Product_Data_Admin {
 			}
 
 			function hideSearchResultsBox(thisElem) {
-				// Add 'hidden' class to closest SR box
-				thisElem.closest('.message').find('.wcemessage_search_results').addClass('hidden');
+				// Add 'hide' class to closest SR box
+				thisElem.closest('.message').find('.wcemessage_search_results').addClass('hide');
 			}
 
 			function showSearchResultsBox(thisElem) {
-				// Remove 'hidden' class from closest SR box
-				thisElem.closest('.message').find('.wcemessage_search_results').removeClass('hidden');
+				// Remove 'hide' class from closest SR box
+				thisElem.closest('.message').find('.wcemessage_search_results').removeClass('hide');
 				allHidden = false;
 			}
 
@@ -523,9 +523,9 @@ class Woo_Product_Data_Admin {
 					e.preventDefault();
 
 					// Hide all search results elements
-					$('.wcemessage_search_results').addClass('hidden');
+					$('.wcemessage_search_results').addClass('hide');
 
-					// Remove 'hidden' class from closest search results box
+					// Remove 'hide' class from closest search results box
 					showSearchResultsBox( $(e.target) );
 
 					// Focus on the search results box that was clicked
@@ -550,7 +550,7 @@ class Woo_Product_Data_Admin {
 					// Add a new 'Remove' button if not already present
 					$(e.target).closest('.table-row').find('.button-container:not(.remove)').addClass('remove').html('<a href="#" class="button remove-wcemessage" alt="Remove" title="Remove"><span class="dashicons dashicons-no"></span></a>');
 
-					// Add 'hidden' class to closest search results box
+					// Add 'hide' class to closest search results box
 					hideSearchResultsBox( $(e.target) );
 
 				} else {
@@ -571,7 +571,7 @@ class Woo_Product_Data_Admin {
 				e.preventDefault();
 
 				// Hide Edit buttons
-				$(this).closest('.table-row').find('.button-container').find('.button').addClass('hidden');
+				$(this).closest('.table-row').find('.button-container').find('.button').addClass('hide');
 
 				// Remove field values
 				$(this).closest('.table-row').find('.wcemessage_search_field_input').val('');
@@ -581,39 +581,39 @@ class Woo_Product_Data_Admin {
 				$(this).closest('.button-container').removeClass('remove');
 				$(this).closest('.button-container').removeClass('edit');
 
-	        });
+			});
 
-	    });
+		});
 		</script>
-	<?php
+		<?php
 	}
 
-	// AJAX Fetch function
-	public function wce_data_fetch(){
+	// AJAX Fetch function.
+	public function wce_data_fetch() {
 
 		$search_term = esc_attr( $_POST['keyword'] );
 
 		$args = array(
-	        'post_type' => 'woocustomemails',
+			'post_type' => 'woocustomemails',
 			'post_status' => 'publish',
 			'posts_per_page' => -1,
-	        's' => $search_term
-	    );
+			's' => $search_term
+		);
 
 		$the_query = new WP_Query($args);
 
-	    if( $the_query->have_posts() ) {
-	        while( $the_query->have_posts() ): $the_query->the_post();
+		if( $the_query->have_posts() ) {
+			while( $the_query->have_posts() ): $the_query->the_post();
 
 				$thePermalink = esc_url( post_permalink() );
 				$theID = get_the_ID();
 				$theTitle = get_the_title();
 				?>
-            	<p><a href="#" class="wce-search-result" data-id="<?php echo $theID; ?>" data-title="<?php echo $theTitle; ?>"><?php echo $theID; ?> - <?php echo $theTitle; ?></a></p>
-	        	<?php
+				<p><a href="#" class="wce-search-result" data-id="<?php echo $theID; ?>" data-title="<?php echo $theTitle; ?>"><?php echo $theID; ?> - <?php echo $theTitle; ?></a></p>
+				<?php
 			endwhile;
-	        wp_reset_postdata();
-	    } else {
+			wp_reset_postdata();
+		} else {
 			$addMessagesURL = admin_url('edit.php?post_type=woocustomemails');
 			$addMessagesText = '<a href="'.$addMessagesURL.'" target="_blank" class="edit-wcemessage">'.__('Custom Email Messages','woocommerce').'</a>';
 			?>
@@ -621,7 +621,7 @@ class Woo_Product_Data_Admin {
 			<?php
 		}
 
-	    die();
+		die();
 	}
 
 

@@ -159,9 +159,9 @@ input#wcemessage_search::placeholder {
     height: auto;
 }
 
-.wcemessage_controls .hidden,
-.wcemessage_search_results_field.hidden,
-.wce-product-options-table .hidden {
+.wcemessage_controls .hide,
+.wcemessage_search_results_field.hide,
+.wce-product-options-table .hide {
     display: none !important;
 }
 
@@ -306,6 +306,96 @@ a.wce-search-result {
 
 .fullwidth-text {
     width: 100%;
+}
+
+/* WCE ASSIGNED MESSAGES PAGE
+--------------------- */
+.woocustomemails_page_woocustomemails_assigned .post-count {
+    margin: 30px 0;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table {
+    width: 100%;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table thead.header {
+    background-color: rgba(0,0,0,0.15);
+    font-weight: bold;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table tbody tr:nth-child(even) {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td {
+    padding: 5px;
+    text-align: left;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table tbody td {
+    vertical-align: top;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table tbody td > div {
+    padding: 5px;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.product-count,
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus {
+    text-align: center;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-title > div,
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus > div,
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-templatelocation > div {
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-title > div:first-child,
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus > div:first-child,
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-templatelocation > div:first-child {
+    margin-top: 0;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.product-title a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: bold;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.product-title a img {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus > span {
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin: 0.5em 1em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-flex;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus .on-hold {
+    background: #f8dda7;
+    color: #94660c;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus .processing {
+    background: #c6e1c6;
+    color: #5b841b;
+}
+
+.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus .completed {
+    background: #c8d7e1;
+    color: #2e4453;
 }
 
 </style>

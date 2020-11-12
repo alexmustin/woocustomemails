@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Woo Custom Emails Per Product
  * Description: Add custom content per product into the default WooCommerce customer receipt email template.
- * Version: 2.2.5
+ * Version: 2.2.6
  * Author: Alex Mustin
  * Author URI: http://alexmustin.com
  * Text Domain: woo_custom_emails_domain
@@ -10,7 +10,7 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  *
  * WC requires at least: 3.5
- * WC tested up to: 4.0.1
+ * WC tested up to: 4.7.0
  *
  * @package woo_custom_emails_domain
  */
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define Globals.
-define( 'WCE_PLUGIN_VERSION', '2.2.5' );
+define( 'WCE_PLUGIN_VERSION', '2.2.6' );
 
 // Add a check for WooCommerce on plugin activation.
 register_activation_hook( __FILE__, 'woo_custom_emails_activate_check_for_woo' );
@@ -62,10 +62,10 @@ function run_woo_custom_emails_per_product() {
 	$woo_custom_emails_domain->run();
 
 	// Create a new Admin Settings object.
-	$woo_custo_emails_settings = new Woo_Custom_Emails_Per_Product_Admin_Settings();
+	$woo_custom_emails_settings = new Woo_Custom_Emails_Per_Product_Admin_Settings();
 
 	// Add CPT.
-	$woo_custo_emails_settings->new_cpt_wcemails();
+	$woo_custom_emails_settings->new_cpt_wcemails();
 
 	// Create a new output object.
 	new Woo_Custom_Emails_Output();

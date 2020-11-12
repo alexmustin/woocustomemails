@@ -151,9 +151,19 @@ class Woo_Custom_Emails_Output {
 			 */
 			function woo_custom_emails_output_message( $order, $sent_to_admin, $shown_messages ) {
 
-				// Exit if sending to Admin - do not show content on Admin "New Order" emails
-				if ( $sent_to_admin ) {
-					return;
+				// Show content on Admin emails if setting is enabled.
+
+				$options = get_option( 'woocustomemails_settings_name' );
+				$show_in_admin_email_setting = $options['show_in_admin_emails'];
+
+				if ( isset( $show_in_admin_email_setting ) ) {
+					// Setting enabled - show message in Admin email.
+					// $show_in_admin_email_setting = $this->options['show_in_admin_email'];
+				} else {
+					// Setting disabled - do not show message in Admin email.
+					if ( $sent_to_admin ) {
+						return;
+					}
 				}
 
 				if ( ! is_array( $shown_messages ) ) {
