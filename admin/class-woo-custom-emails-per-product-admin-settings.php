@@ -190,6 +190,7 @@ class Woo_Custom_Emails_Per_Product_Admin_Settings {
     * @since 2.2.6
     */
 	public function display_wce_assigned_page() {
+		$output = '';
 		?>
 		<div class="wrap">
 
@@ -199,11 +200,10 @@ class Woo_Custom_Emails_Per_Product_Admin_Settings {
 			// Setup query arguments.
 			$args = array(
                 'post_type'            => 'product',
-                'ignore_sticky_posts'  => 1,
-                'no_found_rows'        => 1,
+                'no_found_rows'        => true,
                 // 'posts_per_page'       => -1,
-                'orderby'              => 'name', // (string) - Order posts by: name, date, rand.
-                'order'                => 'asc', // (string) - Post order: asc, desc.
+                // 'orderby'              => 'name', // (string) - Order posts by: name, date, rand.
+                // 'order'                => 'asc', // (string) - Post order: asc, desc.
                 'meta_query'           => array(
 					'relation' => 'OR',
                     array(
@@ -555,8 +555,8 @@ class Woo_Custom_Emails_Per_Product_Admin_Settings {
 		$new_input = array();
 
 		// Save 'Include Custom Message in Admin Emails'
-		if( isset( $input['show_in_admin_emails'] ) ) {
-		    $new_input['show_in_admin_emails'] = sanitize_text_field( $input['show_in_admin_emails'] );
+		if( isset( $input['show_in_admin_email'] ) ) {
+		    $new_input['show_in_admin_email'] = sanitize_text_field( $input['show_in_admin_email'] );
 		}
 
 		// Save 'Display Classes'
@@ -587,15 +587,15 @@ class Woo_Custom_Emails_Per_Product_Admin_Settings {
 	public function show_in_admin_email_callback() {
 		$checked = '';
 		$show_in_admin_emails = '';
-		if( ! isset( $this->options['show_in_admin_emails'] ) ) {
+		if( ! isset( $this->options['show_in_admin_email'] ) ) {
 			// Data not set
-			$this->options['show_in_admin_emails'] = false;
+			$this->options['show_in_admin_email'] = false;
 		} else {
 			// Data is set
 			$checked = 'checked';
-			$show_in_admin_emails = $this->options['show_in_admin_emails'];
+			$show_in_admin_emails = $this->options['show_in_admin_email'];
 		}
-		printf( '<input type="checkbox" id="show_in_admin_emails" name="woocustomemails_settings_name[show_in_admin_emails]" value="1" %s />', $checked );
+		printf( '<input type="checkbox" id="show_in_admin_email" name="woocustomemails_settings_name[show_in_admin_email]" value="1" %s />', $checked );
 		echo '<br><span class="description">' . __( 'Add the Custom Messages to Admin emails.', 'woo_custom_emails_domain' ) . '</span>';
 	}
 

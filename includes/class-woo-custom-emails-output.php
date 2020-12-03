@@ -154,13 +154,14 @@ class Woo_Custom_Emails_Output {
 				// Show content on Admin emails if setting is enabled.
 
 				$options = get_option( 'woocustomemails_settings_name' );
-				$show_in_admin_email_setting = $options['show_in_admin_emails'];
+				$show_in_admin_email_setting = $options['show_in_admin_email'];
 
 				if ( isset( $show_in_admin_email_setting ) ) {
-					// Setting enabled - show message in Admin email.
-					// $show_in_admin_email_setting = $this->options['show_in_admin_email'];
+					// Setting is enabled - show the message in the Admin email.
+					// The parent function will return the message content.
 				} else {
-					// Setting disabled - do not show message in Admin email.
+					// Setting is disabled - do not show the message in the Admin email.
+					// Exit out of the parent function and return nothing.
 					if ( $sent_to_admin ) {
 						return;
 					}

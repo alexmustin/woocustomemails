@@ -1,13 +1,14 @@
 === Woo Custom Emails Per Product ===
 Contributors: alexmustin
 Author: alexmustin
-Author URI: http://alexmustin.com/
+Author URI: https://alexmustin.com/
 Donate link: https://venmo.com/Alex-Mustin
 Tags: email, template, product, receipt, woo, woocommerce
-Requires at least: 4.9.9
-Tested up to: 5.5.3
-Stable tag: 2.2.6
-Version: 2.2.6
+Requires at least: 5.0
+Tested up to: 5.5
+Requires PHP: 5.5
+Stable tag: 2.2.7
+Version: 2.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,15 +44,15 @@ This section describes how to install the plugin and get it working.
 
 == Frequently Asked Questions ==
 
-= Why can't I see the 'Custom Emails' tab when Editing a ____ Product? =
-At this time, the plugin is only designed to modify emails sent for the default WooCommerce "product" post type. You may be able to use the plugin with other product types by adding the proper CSS classes to the "Extra Display Classes" field under the WCE Settings page. To find the CSS classes which will make the tab visible: edit one of your custom products, scroll to the 'Product Data' table, inspect the code for the tab content you can see, and use that CSS class inside the 'Extra Display Classes' field on the WCE Settings page.
+= Why can't I see the 'Custom Emails' tab when Editing a Product? =
+At this time, the plugin is developed to only modify emails sent for the default WooCommerce "product" post type. You may be able to use this plugin with other product types, by adding the proper CSS classes to the "Extra Display Classes" field under the WCE Settings page. To find the CSS classes which will make the tab visible: edit one of your custom products, scroll to the 'Product Data' table, inspect the code for the tab content you can see, and use that CSS class inside the 'Extra Display Classes' field on the WCE Settings page.
 If you are using a WooCommerce add-on which creates its own custom emails (like Box Office, etc), this plugin will not be able to add content inside those emails. You may be able to find a paid plugin which can modify emails for your custom product type.
 
 = Why does my content appear in the wrong location in the email? =
 When there are multiple products in an Order which have the same Custom Emails message assigned, the first occurrence of a product with that Custom Email will get priority on which Content Location setting to use.
 
 = How can I see which products have WCE Messages assigned? =
-In Version 2.2.6, we added a new page called "Assigned Messages" under the "Custom Emails" menu. This page performs a query to find your WooCommerce products which have Custom Messages assigned, and will output each product in a table showing its associated Custom Messages, their titles, assigned order status, and assigned template location.
+We have included a page under the "Custom Emails" menu, called "Assigned Messages." This page performs a query to find your WooCommerce products which have Custom Messages assigned, and will output each product in a table showing its associated Custom Messages, their titles, assigned order status, and assigned template location.
 
 = What HTML tags are allowed? =
 You can use any HTML allowed in the Classic Editor.
@@ -75,6 +76,10 @@ If you are having any issues, please post in the Support Forum.
 8. Woo Custom Emails Settings page
 
 == Changelog ==
+
+= 2.2.7 - (Dec 2, 2020) =
+* FIX: Resolves the error: "Undefined variable: output ..."
+* FIX: Resolves the error: "Notice: Undefined index: show_in_admin_emails ..."
 
 = 2.2.6 - (Nov 12, 2020) =
 * UPDATE: Compatible with WordPress 5.6 and WooCommerce 4.7.0
