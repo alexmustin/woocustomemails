@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Woo Custom Emails Per Product
  * Description: Add custom content per product into the default WooCommerce customer receipt email template.
- * Version: 2.2.7
+ * Version: 2.2.8
  * Author: Alex Mustin
  * Author URI: http://alexmustin.com
  * Text Domain: woo_custom_emails_domain
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
- * WC requires at least: 3.5
- * WC tested up to: 4.7.1
+ * WC requires at least: 4.9.2
+ * WC tested up to: 5.0.0
  *
  * @package woo_custom_emails_domain
  */
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define Globals.
-define( 'WCE_PLUGIN_VERSION', '2.2.7' );
+define( 'WCE_PLUGIN_VERSION', '2.2.8' );
 
 // Add a check for WooCommerce on plugin activation.
 register_activation_hook( __FILE__, 'woo_custom_emails_activate_check_for_woo' );
@@ -45,9 +45,47 @@ function woo_custom_emails_activate_check_for_woo() {
 	}
 }
 
+// Add a custom Database Table on plugin activation.
+register_activation_hook( __FILE__, 'woo_custom_emails_add_db_table' );
+
+function woo_custom_emails_add_db_table() {
+
+	// Global var for WP db.
+	global $wpdb;
+
+	// Collation setting.
+	$charset_collate = $wpdb->get_charset_collate();
+
+	// Custom Table name.
+	$table_name = $wpdb->prefix . 'wcepp_messages';
+
+	// SQL statement.
+	$sql = "CREATE TABLE `$table_name` (
+	`id` int(9) NOT NULL AUTO_INCREMENT,
+	`product_id` int(9) DEFAULT NULL,
+	`msg_processing` varchar(220) DEFAULT NULL,
+	`msg_processing_loc` varchar(220) DEFAULT NULL,
+	`msg_onhold` varchar(220) DEFAULT NULL,
+	`msg_onhold_loc` varchar(220) DEFAULT NULL,
+	`msg_completed` varchar(220) DEFAULT NULL,
+	`msg_completed_loc` varchar(220) DEFAULT NULL,
+	PRIMARY KEY(id)
+	) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+	";
+
+	// If the table does not exist, run the SQL statement using dbDelta() function.
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+	}
+}
+
 // Include required files.
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-woo-custom-emails-per-product.php';
+require_once plugin_dir_path( __FILE__ ) . 'admin/class-woo-custom-emails-per-product-cpt.php';
+require_once plugin_dir_path( __FILE__ ) . 'admin/class-woo-custom-emails-column-display.php';
 require_once plugin_dir_path( __FILE__ ) . 'admin/class-woo-custom-emails-per-product-admin-settings.php';
+// require_once plugin_dir_path( __FILE__ ) . 'admin/class-woo-custom-emails-assigned-messages.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-woo-custom-emails-output.php';
 
 /**
@@ -59,12 +97,6 @@ function run_woo_custom_emails_per_product() {
 
 	// Do the 'run' function inside our object.
 	$woo_custom_emails_domain->run();
-
-	// Create a new Admin Settings object.
-	$woo_custom_emails_settings = new Woo_Custom_Emails_Per_Product_Admin_Settings();
-
-	// Add CPT.
-	$woo_custom_emails_settings->new_cpt_wcemails();
 
 	// Create a new output object.
 	new Woo_Custom_Emails_Output();

@@ -106,7 +106,6 @@ class Woo_Custom_Emails_Output {
 	 *
 	 * @param array  $shown_messages An array of which messages have already been added to the email.
 	 * @param object $order An object containing all the order info.
-	 * @param boolean $sent_to_admin A boolean value if this email is sent to admin or not
 	 */
 	public function woo_custom_emails_insert_content( $shown_messages, $order ) {
 
@@ -148,15 +147,16 @@ class Woo_Custom_Emails_Output {
 			 *
 			 * @param object $order An object containing all the Order information.
 			 * @param array  $shown_messages An array of which messages have already been added to the email.
+			 * @param boolean $sent_to_admin A boolean value if this email is sent to admin or not.
 			 */
 			function woo_custom_emails_output_message( $order, $sent_to_admin, $shown_messages ) {
 
 				// Show content on Admin emails if setting is enabled.
 
 				$options = get_option( 'woocustomemails_settings_name' );
-				$show_in_admin_email_setting = $options['show_in_admin_email'];
+				$show_in_admin_email_setting = isset( $options['show_in_admin_email'] ) ? $options['show_in_admin_email'] : false;
 
-				if ( isset( $show_in_admin_email_setting ) ) {
+				if ( false !== $show_in_admin_email_setting ) {
 					// Setting is enabled - show the message in the Admin email.
 					// The parent function will return the message content.
 				} else {

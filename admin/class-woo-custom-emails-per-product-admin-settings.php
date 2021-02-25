@@ -2,145 +2,216 @@
 
 class Woo_Custom_Emails_Per_Product_Admin_Settings {
 
-	function __construct() {
+	/*
+	 * For easier overriding we declared the keys
+	 * here as well as our tabs array which is populated
+	 * when registering settings
+	 */
+	private $display_settings_key = 'woocustomemails_settings_name';
+	private $admin_options_key = 'wcepp_admin_options';
+	private $plugin_settingspage_key = 'woocustomemails_settings_page';
+	private $plugin_settings_tabs = array();
 
-        add_filter( 'manage_woocustomemails_posts_columns', array( $this, 'set_custom_edit_woocustomemails_columns' ) );
-		add_action( 'manage_woocustomemails_posts_custom_column' , array( $this, 'custom_woocustomemails_column' ), 10, 2 );
+	public function __construct() {
 
-		// Register Settings
-		add_action( 'admin_init', array( $this, 'woocustomemails_settings_init' ) );
+		// Init settings.
+		add_action( 'init', array( &$this, 'load_settings' ) );
 
-		// Add 'Assigned Messages' page under WCE menu
-		add_action( 'admin_menu', array( $this, 'add_woocustomemails_assignedmessages_menu' ) );
+		// Register Settings Sections.
+		add_action( 'admin_init', array( &$this, 'register_display_settings' ) );
+		add_action( 'admin_init', array( &$this, 'register_admin_options' ) );
 
-		// Add 'Settings' page under WCE menu
-		add_action( 'admin_menu', array( $this, 'add_woocustomemails_settings_menu' ) );
-
-		// Save Settings
-		add_action( 'load-woocustomemails_page_woocustomemails-settings', array( $this, 'woocustomemails_save_options' ) );
+		// Add the 'Settings' page under the WCE menu.
+		add_action( 'admin_menu', array( &$this, 'add_woocustomemails_settings_menu' ) );
 
 	}
 
-    /**
-	 * Creates a new custom post type
-	 *
-	 * @since 	2.0.0
-	 * @access 	public
-	 * @uses 	register_post_type()
+	/*
+	 * Loads both the Display Settings and Admin Options from
+	 * the database into their respective arrays. Uses
+	 * array_merge to merge with default values if they're
+	 * missing.
 	 */
-	public static function new_cpt_wcemails() {
+	public function load_settings() {
+		$this->display_settings = (array) get_option( $this->display_settings_key );
+		$this->admin_options = (array) get_option( $this->admin_options_key );
 
-		$cap_type 	= 'post';
-		$plural 	= 'Woo Custom Email Messages';
-		$single 	= 'WCE Message';
-		$cpt_name 	= 'woocustomemails';
+		// Merge with defaults
+		$this->display_settings = array_merge( array(
+			'show_in_admin_email' => '',
+			'display_classes' => '',
+		), $this->display_settings );
 
-		$opts['can_export']								= TRUE;
-		$opts['capability_type']						= $cap_type;
-		$opts['description']							= '';
-		$opts['exclude_from_search']					= TRUE;
-		$opts['has_archive']							= TRUE;
-		$opts['hierarchical']							= FALSE;
-		$opts['map_meta_cap']							= TRUE;
-		$opts['menu_icon']								= 'dashicons-email-alt';
-		$opts['menu_position']							= 50;
-		$opts['public']									= FALSE;
-		$opts['publicly_querable']						= FALSE;
-		$opts['register_meta_box_cb']					= '';
-		$opts['rewrite']								= FALSE;
-		$opts['show_in_admin_bar']						= TRUE;
-		$opts['show_in_menu']							= TRUE;
-		$opts['show_in_nav_menu']						= TRUE;
-		$opts['show_ui']								= TRUE;
-		$opts['supports']								= array( 'title', 'editor', 'revisions' );
-		$opts['taxonomies']								= array();
-
-		$opts['capabilities']['delete_others_posts']	= "delete_others_{$cap_type}s";
-		$opts['capabilities']['delete_post']			= "delete_{$cap_type}";
-		$opts['capabilities']['delete_posts']			= "delete_{$cap_type}s";
-		$opts['capabilities']['delete_private_posts']	= "delete_private_{$cap_type}s";
-		$opts['capabilities']['delete_published_posts']	= "delete_published_{$cap_type}s";
-		$opts['capabilities']['edit_others_posts']		= "edit_others_{$cap_type}s";
-		$opts['capabilities']['edit_post']				= "edit_{$cap_type}";
-		$opts['capabilities']['edit_posts']				= "edit_{$cap_type}s";
-		$opts['capabilities']['edit_private_posts']		= "edit_private_{$cap_type}s";
-		$opts['capabilities']['edit_published_posts']	= "edit_published_{$cap_type}s";
-		$opts['capabilities']['publish_posts']			= "publish_{$cap_type}s";
-		$opts['capabilities']['read_post']				= "read_{$cap_type}";
-		$opts['capabilities']['read_private_posts']		= "read_private_{$cap_type}s";
-
-		$opts['labels']['add_new']						= esc_html__( "Add New {$single}", 'woo_custom_emails_domain' );
-		$opts['labels']['add_new_item']					= esc_html__( "Add New {$single}", 'woo_custom_emails_domain' );
-		$opts['labels']['all_items']					= esc_html__( $plural, 'woo_custom_emails_domain' );
-		$opts['labels']['edit_item']					= esc_html__( "Edit {$single}" , 'woo_custom_emails_domain' );
-        $opts['labels']['menu_name']					= esc_html__( 'Custom Emails', 'woo_custom_emails_domain' );
-		$opts['labels']['name']							= esc_html__( $plural, 'woo_custom_emails_domain' );
-		$opts['labels']['name_admin_bar']				= esc_html__( $single, 'woo_custom_emails_domain' );
-		$opts['labels']['new_item']						= esc_html__( "New {$single}", 'woo_custom_emails_domain' );
-		$opts['labels']['not_found']					= esc_html__( "No {$plural} Found", 'woo_custom_emails_domain' );
-		$opts['labels']['not_found_in_trash']			= esc_html__( "No {$plural} Found in Trash", 'woo_custom_emails_domain' );
-		$opts['labels']['parent_item_colon']			= esc_html__( "Parent {$plural} :", 'woo_custom_emails_domain' );
-		$opts['labels']['search_items']					= esc_html__( "Search {$plural}", 'woo_custom_emails_domain' );
-		$opts['labels']['singular_name']				= esc_html__( $single, 'woo_custom_emails_domain' );
-		$opts['labels']['view_item']					= esc_html__( "View {$single}", 'woo_custom_emails_domain' );
-
-		$opts = apply_filters( 'woocustomemails-cpt-options', $opts );
-
-		register_post_type( strtolower( $cpt_name ), $opts );
-
-	} // new_cpt_wcemails()
-
-    /**
-	 * Add an "ID" column to the WCE Messages list
-	 *
-	 * @since  2.0.0
-	 */
-	public function set_custom_edit_woocustomemails_columns($columns) {
-
-		// Remove the Title and Date columns now, add them back later
-		unset($columns['title']);
-		unset($columns['date']);
-
-		// Add new "ID" column
-		$columns['messageid'] = __( 'ID', 'woo_custom_emails_domain' );
-
-		// Add the Title and Date columns back in
-		$columns['title'] = __( 'Title', 'woo_custom_emails_domain' );
-		$columns['date'] = __( 'Date', 'woo_custom_emails_domain' );
-
-		return $columns;
+		$this->admin_options = array_merge( array(
+			// 'advanced_option' => 'Advanced value',
+		), $this->admin_options );
 	}
 
-	/**
-	 * Display the "ID" column data
-	 *
-	 * @since  2.0.0
+	/*
+	 * Registers the Display Settings via the Settings API,
+	 * appends the setting to the tabs array of the object.
 	 */
-	public function custom_woocustomemails_column( $column, $post_id ) {
-		if ( $column == 'messageid') {
-			$id = $post_id;
-			echo $id;
+	public function register_display_settings() {
+		$this->plugin_settings_tabs[$this->display_settings_key] = 'Display Settings';
+
+		// Register the setting.
+		register_setting(
+			'woocustomemails_settings_group',
+			$this->display_settings_key
+		);
+
+		// Add the section.
+		add_settings_section(
+			'wce_display_settings_section',
+			'Display Settings',
+			array( &$this, 'section_display_settings_desc' ),
+			$this->display_settings_key
+		);
+
+		// Add 'Show In Admin Emails' field.
+		add_settings_field(
+			'show_in_admin_email',
+			__('Include Custom Messages in Admin Emails', 'woo_custom_emails_domain'),
+			array( &$this, 'field_showinadminemails' ),
+			$this->display_settings_key,
+			'wce_display_settings_section'
+		);
+
+		// hr Separator.
+		add_settings_field(
+			'hr-1',
+			'<hr>',
+			array( &$this, 'output_hr' ),
+			$this->display_settings_key,
+			'wce_display_settings_section'
+		);
+
+		// Add 'Display Classes' field.
+		add_settings_field(
+			'display_classes',
+			__('Display for Other Product Types', 'woo_custom_emails_domain'),
+			array( &$this, 'field_displayclasses' ),
+			$this->display_settings_key,
+			'wce_display_settings_section'
+		);
+	}
+
+	// Outputs a horizontal rule.
+	public function output_hr() {
+		echo '<hr>';
+	}
+
+	/*
+	 * Registers the Admin Options and appends the
+	 * key to the plugin settings tabs array.
+	 */
+	public function register_admin_options() {
+		$this->plugin_settings_tabs[$this->admin_options_key] = 'Admin Options';
+
+		// Register the setting.
+		register_setting(
+			$this->admin_options_key,
+			$this->admin_options_key
+		);
+
+		// Add a section.
+		add_settings_section(
+			'section_admin',
+			'Admin Options',
+			array( &$this, 'section_admin_desc' ),
+			$this->admin_options_key
+		);
+
+		// // Add a field.
+		// add_settings_field(
+		// 	'advanced_option',
+		// 	'An Advanced Option',
+		// 	array( &$this, 'field_advanced_option' ),
+		// 	$this->admin_options_key,
+		// 	'section_admin'
+		// );
+	}
+
+	/*
+	 * The following methods provide descriptions
+	 * for their respective sections, used as callbacks
+	 * with add_settings_section
+	 */
+	public function section_display_settings_desc() {
+		echo __( 'Configure the display settings for Woo Custom Emails custom messages.', 'woo_custom_emails_domain' );
+	}
+
+	public function section_admin_desc() {
+		echo __( 'More Admin Options &mdash; including the "Assigned Messages" feature &mdash; will be coming soon in a future release!', 'woo_custom_emails_domain' );
+	}
+
+	/*
+	 * Display Setting field callback, renders a
+	 * text input, note the name and value.
+	 */
+	public function field_showinadminemails() {
+		$checked = '';
+		$show_in_admin_emails = '';
+
+		if ( empty ( $this->display_settings['show_in_admin_email'] ) ) {
+			// Data not set
+			// $show_in_admin_emails = false;
+		} else {
+			// Data is set
+			$checked = 'checked';
+			// $show_in_admin_emails = $this->display_settings['show_in_admin_email'];
 		}
-	}
+		// var_dump($show_in_admin_emails);
+		?>
+		<input type="checkbox" id="show_in_admin_email" name="<?php echo $this->display_settings_key; ?>[show_in_admin_email]" value="1" <?php echo $checked; ?> /> <b><?php echo __( 'Include in Admin Emails', 'woo_custom_emails_domain' ); ?></b><br>
+		<?php
+		echo '<p>' . __( 'Show the Custom Messages content inside Admin order notification emails.', 'woo_custom_emails_domain' ) . '</p>';
 
-	public function add_woocustomemails_assignedmessages_menu() {
-
-		$wce_assignedmessages_menu = add_submenu_page(
-            'edit.php?post_type=woocustomemails',
-            __('Assigned Messages','woo_custom_emails_domain'), // page title
-            __('Assigned Messages','woo_custom_emails_domain'), // menu title
-            'manage_options', // capability
-            'woocustomemails_assigned', // menu slug
-            array( $this, 'display_wce_assigned_page' )
-        );
-
-		add_action( 'admin_print_styles-' . $wce_assignedmessages_menu, 'wce_custom_admin_css' );
-
-		function wce_custom_admin_css() {
-			wp_enqueue_style( 'wce-admin-styles', plugins_url( '/woocustomemails-admin-styles.css', __FILE__ ) );
-		}
+		// $options = get_option( 'woocustomemails_settings_name' );
+		// $old_show_in_admin_email_setting = $options['show_in_admin_email'];
+		// echo '<p>'.$old_show_in_admin_email_setting.'</p>';
 
 	}
+
+	/*
+	 * Display Setting field callback, renders a
+	 * text input, note the name and value.
+	 */
+	public function field_displayclasses() {
+		$dclasses = $this->display_settings['display_classes'];
+		// var_dump($dclasses);
+		?>
+		<textarea id="display_classes" name="<?php echo $this->display_settings_key; ?>[display_classes]" class="fullwidth-text"><?php echo esc_attr( $this->display_settings['display_classes'] ); ?></textarea>
+		<?php
+		// Description.
+		echo '<div class="description" style="margin-top: 20px;">' . __( 'By default, WooCommerce only shows the \'Custom Emails\' tab for the standard \'<b>product</b>\' post type.<br>Use this option to specify other product post types which will show the Custom Emails tab. This should be a comma-separated list.', 'woo_custom_emails_domain' ) . '</div>';
+
+		// Code example.
+		echo '<div class="description" style="margin-top: 20px; margin-left: 30px;"><b>Example:</b><pre>show_if_booking, show_if_grouped</pre></div>';
+
+		// Instructions to find CSS Class.
+		echo '<div class="description" style="margin-top: 20px;">' . __( '<b>How to Find the CSS Class for a Custom Product</b><br>To find the class for your product type, do the following:', 'woo_custom_emails_domain' );
+		echo '<ol>';
+		echo __( '<li>Go to <b>Products</b>, and Edit a custom product</li>', 'woo_custom_emails_domain' );
+		echo __( '<li>Scroll down to the <b>Product Data</b> table</li>', 'woo_custom_emails_domain' );
+		echo __( '<li><b>Inspect the code</b> for a tab menu item, like <b>Inventory</b> (or any menu item which appears only for your product type)</li>', 'woo_custom_emails_domain' );
+		echo __( '<li>Find the custom CSS class for your product type which is assigned to that tab menu item. These classes usually start with <b>show_if_</b> -- ex: "show_if_booking"</li>', 'woo_custom_emails_domain' );
+		echo __( '<li>Copy and paste that CSS class into the field above</li>', 'woo_custom_emails_domain' );
+		echo __( '<li>Save your settings</li>', 'woo_custom_emails_domain' );
+		echo '</ol>';
+		echo '</div>';
+
+		// Note text.
+		echo '<div style="margin-top: 20px; padding: 20px; border: 1px solid rgba(0,0,0,0.15);"><b style="color: #ff0000;">' . __( 'Please Note:</b> This feature is experimental and is not guaranteed to work.<br>Some WooCommerce add-ons use their own method of sending emails, outside of the normal WooCommerce process this plugin uses.', 'woo_custom_emails_domain' ) . '</div>';
+
+		// $options = get_option( 'woocustomemails_settings_name' );
+		// $old_classes_setting = $options['display_classes'];
+		// echo '<p>'.$old_classes_setting.'</p>';
+	}
+
+	// public function field_advanced_option() {
+		// // settings go here!
+	// }
 
     /**
     * Create a new custom link for the WCE Settings page
@@ -166,384 +237,25 @@ class Woo_Custom_Emails_Per_Product_Admin_Settings {
     * @since 2.1.0
     */
 	public function display_wce_settings_page() {
-		$this->options = get_option( 'woocustomemails_settings_name' );
-		?>
-		<div class="wrap">
-
-			<h1 class="wp-heading-inline">Woo Custom Emails Settings</h1>
-
-			<form action="options.php" method="post">
-	            <?php
-	            settings_fields('woocustomemails_settings_group');
-	            do_settings_sections('woocustomemails_settings_page');
-	            submit_button('Save Settings');
-	            ?>
-	        </form>
-
-		</div>
-		<?php
+		include_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/woocustomemails-admin-settings-page-form.php';
 	}
 
-	/**
-    * Show the WCE Assigned Messages page content
-    *
-    * @since 2.2.6
-    */
-	public function display_wce_assigned_page() {
-		$output = '';
-		?>
-		<div class="wrap">
-
-			<h1 class="wp-heading-inline">Woo Custom Emails - Assigned Messages</h1>
-
-			<?php
-			// Setup query arguments.
-			$args = array(
-                'post_type'            => 'product',
-                'no_found_rows'        => true,
-                // 'posts_per_page'       => -1,
-                // 'orderby'              => 'name', // (string) - Order posts by: name, date, rand.
-                // 'order'                => 'asc', // (string) - Post order: asc, desc.
-                'meta_query'           => array(
-					'relation' => 'OR',
-                    array(
-                        'key' => 'wcemessage_id_onhold',
-						'value' => '',
-                        'compare' => '!=',
-                    ),
-					array(
-                        'key' => 'wcemessage_id_processing',
-						'value' => '',
-                        'compare' => '!=',
-                    ),
-					array(
-                        'key' => 'wcemessage_id_completed',
-						'value' => '',
-                        'compare' => '!=',
-                    ),
-                ),
-            );
-
-	        // Create query object.
-	        $query = new WP_Query( $args );
-
-			$total_posts = $query->post_count;
-
-			$output .= '<div class="post-count">';
-			$output .= '<p>You have <b>' . $total_posts . '</b> products with WCE Messages assigned.';
-
-			// Message for 0 found products.
-			if ( $total_posts < 1 ) {
-				$output .= ' You can assign a WCE Message under the "Messages" tab when editing a product. <a href="' . get_bloginfo('url') . '/wp-admin/edit.php?post_type=product">See All Products &rarr;</a>';
-			}
-
-			$output .= '</p></div>';
-
-			// Open HTML output.
-        	$output .= '<div class="assigned-wce-messages">';
-
-			// If query object has posts...
-        	if ( $query->have_posts() ) {
-
-				// Open data table.
-				$output .= '<table>';
-				$output .= '<thead class="header">';
-
-				// Product Count column.
-				$output .= '<td class="product-count">#</td>';
-
-				// Product column.
-				$output .= '<td class="product-title">Product</td>';
-
-				// Assigned Message Title column.
-				$output .= '<td class="assigned-message-title">Assigned WCE Messages</td>';
-
-				// Assigned Message Order Status column.
-				$output .= '<td class="assigned-message-orderstatus">Order Status</td>';
-
-				// Assigned Message Template Location column.
-				$output .= '<td class="assigned-message-templatelocation">Location</td>';
-
-				$output .= '</thead>';
-				$output .= '<tbody>';
-
-				$count = 1;
-
-				// While query has posts...
-            	while( $query->have_posts() ) {
-
-					// Assign query object.
-                	$query->the_post();
-
-					// Assign global vars.
-					global $product, $post;
-
-					// Assign total count.
-					$total_posts = $query->post_count;
-
-					// Assign vars.
-	                $this_id = get_the_ID();
-					$this_thumb = wp_get_attachment_image_src( get_post_thumbnail_id( $this_id ), 'thumbnail' );
-	                $this_title = $query->post->post_title;
-	                $this_productlink = get_edit_post_link( $this_id );
-
-					$wcemessage_id_onhold =
-						$wcemessage_id_processing =
-						$wcemessage_id_completed =
-						$wcemessage_location_onhold =
-						$wcemessage_location_processing =
-						$wcemessage_location_completed =
-						$wce_onhold_message_title =
-						$wce_onhold_message_editURL =
-						$wce_processing_message_title =
-						$wce_processing_message_editURL =
-						$wce_completed_message_title =
-						$wce_completed_message_editURL =
-						$this_wcemessage_id_onhold =
-						$this_wcemessage_id_processing =
-						$this_wcemessage_id_completed =
-						$this_orderstatus_onhold =
-						$this_orderstatus_processing =
-						$this_orderstatus_completed =
-						$this_location_onhold =
-						$this_location_processing =
-						$this_location_completed = '';
-
-
-					// Get WCE Message meta.
-					$wcemessage_id_onhold = (int) get_post_meta( $this_id, 'wcemessage_id_onhold', true );
-					$wcemessage_location_onhold = get_post_meta( $this_id, 'location_onhold', true );
-					$wcemessage_id_processing = (int) get_post_meta( $this_id, 'wcemessage_id_processing', true );
-					$wcemessage_location_processing = get_post_meta( $this_id, 'location_processing', true );
-					$wcemessage_id_completed = (int) get_post_meta( $this_id, 'wcemessage_id_completed', true );
-					$wcemessage_location_completed = get_post_meta( $this_id, 'location_completed', true );
-
-					// Check for On-Hold content.
-					if ( $wcemessage_id_onhold > 0 ) {
-						$this_orderstatus_onhold = '<span class="on-hold">On Hold</span>';
-						$this_wcemessage_id_onhold = $wcemessage_id_onhold;
-						$wce_onhold_message_title = get_the_title( $this_wcemessage_id_onhold );
-						$wce_onhold_message_editURL = get_edit_post_link( $this_wcemessage_id_onhold );
-					}
-
-					// Check for Processing content.
-					if ( $wcemessage_id_processing > 0 ) {
-						$this_orderstatus_processing = '<span class="processing">Processing</span>';
-						$this_wcemessage_id_processing = $wcemessage_id_processing;
-						$wce_processing_message_title = get_the_title( $this_wcemessage_id_processing );
-						$wce_processing_message_editURL = get_edit_post_link( $this_wcemessage_id_processing );
-					}
-
-					// Check for Completed content.
-					if ( $wcemessage_id_completed > 0 ) {
-						$this_orderstatus_completed = '<span class="completed">Completed</span>';
-						$this_wcemessage_id_completed = $wcemessage_id_completed;
-						$wce_completed_message_title = get_the_title( $this_wcemessage_id_completed );
-						$wce_completed_message_editURL = get_edit_post_link( $this_wcemessage_id_completed );
-					}
-
-					switch ( $wcemessage_location_onhold ) {
-		                case 'woocommerce_email_before_order_table':
-							$this_location_onhold = 'Before Order Table';
-		                    break;
-						case 'woocommerce_email_after_order_table':
-							$this_location_onhold = 'After Order Table';
-		                    break;
-						case 'woocommerce_email_order_meta':
-							$this_location_onhold = 'After Order Meta';
-		                    break;
-						case 'woocommerce_email_customer_details':
-							$this_location_onhold = 'After Customer Details';
-							break;
-		            }
-
-					switch ( $wcemessage_location_processing ) {
-		                case 'woocommerce_email_before_order_table':
-							$this_location_processing = 'Before Order Table';
-		                    break;
-						case 'woocommerce_email_after_order_table':
-							$this_location_processing = 'After Order Table';
-		                    break;
-						case 'woocommerce_email_order_meta':
-							$this_location_processing = 'After Order Meta';
-		                    break;
-						case 'woocommerce_email_customer_details':
-							$this_location_processing = 'After Customer Details';
-							break;
-		            }
-
-					switch ( $wcemessage_location_completed ) {
-		                case 'woocommerce_email_before_order_table':
-							$this_location_completed = 'Before Order Table';
-		                    break;
-						case 'woocommerce_email_after_order_table':
-							$this_location_completed = 'After Order Table';
-		                    break;
-						case 'woocommerce_email_order_meta':
-							$this_location_completed = 'After Order Meta';
-		                    break;
-						case 'woocommerce_email_customer_details':
-							$this_location_completed = 'After Customer Details';
-							break;
-		            }
-
-					// Open table row.
-					$output .= '<tr class="product">';
-
-					// Product Count column.
-					$output .= '<td class="product-count"> '. $count . '</td>';
-
-					// Product Title column.
-					$output .= '<td class="product-title"><a href="' . $this_productlink . '" target="_blank"><img src="' . $this_thumb[0] . '" class="thumb" />' . $this_title . '</a></td>';
-
-					// Assigned Messages column.
-					$output .= '<td class="assigned-message-title">';
-
-					// ON-HOLD.
-					if ( $this_wcemessage_id_onhold ) {
-						$output .= '<div class="on-hold">';
-						$output .= '<a href="' . $wce_onhold_message_editURL . '" target="_blank">' . $wce_onhold_message_title . '</a>';
-						$output .= '</div>';
-					}
-
-					// PROCESSING.
-					if ( $this_wcemessage_id_processing ) {
-						$output .= '<div class="processing">';
-						$output .= '<a href="' . $wce_processing_message_editURL . '" target="_blank">' . $wce_processing_message_title . '</a>';
-						$output .= '</div>';
-					}
-
-					// COMPLETED.
-					if ( $this_wcemessage_id_completed ) {
-						$output .= '<div class="completed">';
-						$output .= '<a href="' . $wce_completed_message_editURL . '" target="_blank">' . $wce_completed_message_title . '</a>';
-						$output .= '</div>';
-					}
-
-					$output .= '</td>';
-
-					// Order Status column.
-					$output .= '<td class="assigned-message-orderstatus">';
-
-					// ON-HOLD.
-					if ( $this_wcemessage_id_onhold ) {
-						$output .= '<div class="on-hold">' . $this_orderstatus_onhold . '</div>';
-					}
-
-					// PROCESSING.
-					if ( $this_wcemessage_id_processing ) {
-						$output .= '<div class="processing">' . $this_orderstatus_processing . '</div>';
-					}
-
-					// COMPLETED.
-					if ( $this_wcemessage_id_completed ) {
-						$output .= '<div class="completed">' . $this_orderstatus_completed . '</div>';
-					}
-
-					$output .= '</td>';
-
-					// Location column.
-					$output .= '<td class="assigned-message-templatelocation">';
-
-					// $output .= $this_templatelocation;
-
-					// ON-HOLD.
-					if ( $this_wcemessage_id_onhold ) {
-						$output .= '<div class="on-hold">' . $this_location_onhold . '</div>';
-					}
-
-					// PROCESSING.
-					if ( $this_wcemessage_id_processing ) {
-						$output .= '<div class="processing">' . $this_location_processing . '</div>';
-					}
-
-					// COMPLETED.
-					if ( $this_wcemessage_id_completed ) {
-						$output .= '<div class="completed">' . $this_location_completed . '</div>';
-					}
-
-					$output .= '</td>';
-
-					// Close table row.
-					$output .= '</tr>';
-
-					$count++;
-
-				}
-
-				// Close table body.
-				$output .= '</tbody>';
-
-				// Close data table.
-				$output .= '</table>';
-
-				// Reset wp query.
-            	wp_reset_postdata();
-
-			} else {
-
-				$output .= '<p class="alert"><b>Sorry, no Products found with assigned WCE Messages.</b></p>';
-
-			}
-
-			$output .= '</div><!-- // end .assigned-wce-messages // -->';
-
-			echo $output;
-			?>
-
-		</div><!-- // end .wrap // -->
-		<?php
-	}
-
-	/**
-	* Register and add Settings
-	*
-	* @since 2.1.0
-	*/
-	public function woocustomemails_settings_init() {
-
-		// Register Settings
-		register_setting(
-	        'woocustomemails_settings_group', // Option group
-	        'woocustomemails_settings_name', // Option name
-	        array( $this, 'sanitize' ) // Sanitize
-	    );
-
-		// Register Section -- Display Settings
-	    add_settings_section(
-	        'wce_display_settings_section', // ID
-	        __('Display Settings', 'woo_custom_emails_domain'), // Title
-	        array( $this, 'print_section_info' ), // Callback
-	        'woocustomemails_settings_page' // Page
-        );
-
-		// Field - Include Custom Message in Admin Emails
-		add_settings_field(
-	        'show_in_admin_email', // ID
-	        __('Include Custom Message in Admin Emails', 'woo_custom_emails_domain'), // Title
-	        array( $this, 'show_in_admin_email_callback' ), // Callback
-	        'woocustomemails_settings_page', // Page
-	        'wce_display_settings_section' // Section
-        );
-
-		// Field - Display Classes
-		add_settings_field(
-	        'display_classes', // ID
-	        __('Extra Product Display Classes', 'woo_custom_emails_domain'), // Title
-	        array( $this, 'display_classes_callback' ), // Callback
-	        'woocustomemails_settings_page', // Page
-	        'wce_display_settings_section' // Section
-        );
-
-		// Field - Old 1.x Legacy Content
-	    add_settings_field(
-	        'show_old_customcontent', // ID
-	        __('Show Old 1.x Legacy Content', 'woo_custom_emails_domain'), // Title
-	        array( $this, 'show_old_customcontent_callback' ), // Callback
-	        'woocustomemails_settings_page', // Page
-	        'wce_display_settings_section' // Section
-        );
-
+	/*
+	 * Renders our tabs in the plugin options page,
+	 * walks through the object's tabs array and prints
+	 * them one by one. Provides the heading for the
+	 * plugin_options_page method.
+	 */
+	public function plugin_options_tabs() {
+		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->display_settings_key;
+
+		// screen_icon();
+		echo '<h2 class="nav-tab-wrapper">';
+		foreach ( $this->plugin_settings_tabs as $tab_key => $tab_caption ) {
+			$active = $current_tab == $tab_key ? 'nav-tab-active' : '';
+			echo '<a class="nav-tab ' . $active . '" href="?post_type=woocustomemails&page=' . $this->plugin_settingspage_key . '&tab=' . $tab_key . '">' . $tab_caption . '</a>';
+		}
+		echo '</h2>';
 	}
 
 	/**
@@ -555,80 +267,224 @@ class Woo_Custom_Emails_Per_Product_Admin_Settings {
 		$new_input = array();
 
 		// Save 'Include Custom Message in Admin Emails'
-		if( isset( $input['show_in_admin_email'] ) ) {
+		if ( isset( $input['show_in_admin_email'] ) ) {
 		    $new_input['show_in_admin_email'] = sanitize_text_field( $input['show_in_admin_email'] );
+		} else {
+			$new_input['show_in_admin_email'] = '';
 		}
 
 		// Save 'Display Classes'
-		if( isset( $input['display_classes'] ) && !empty( $input['display_classes'] ) ) {
+		if ( isset( $input['display_classes'] ) ) {
 		    $new_input['display_classes'] = sanitize_text_field( $input['display_classes'] );
 		} else {
 			$new_input['display_classes'] = '';
 		}
 
-		// Save 'Show Old 1.x Content'
-		if( isset( $input['show_old_customcontent'] ) ) {
-		    $new_input['show_old_customcontent'] = sanitize_text_field( $input['show_old_customcontent'] );
-		}
-
 		return $new_input;
 	}
 
-	/**
-	* Print the Section text
-	*/
-	public function print_section_info() {
-		echo __( 'Select the Woo Custom Emails Display settings.', 'woo_custom_emails_domain' );
-	}
+// -------------------------------------------------------------------------- //
+// -------------------------------------------------------------------------- //
+// -------------------------------------------------------------------------- //
 
-	/**
-	* Display the 'Include Custom Message in Admin Emails' field
-	*/
-	public function show_in_admin_email_callback() {
-		$checked = '';
-		$show_in_admin_emails = '';
-		if( ! isset( $this->options['show_in_admin_email'] ) ) {
-			// Data not set
-			$this->options['show_in_admin_email'] = false;
-		} else {
-			// Data is set
-			$checked = 'checked';
-			$show_in_admin_emails = $this->options['show_in_admin_email'];
-		}
-		printf( '<input type="checkbox" id="show_in_admin_email" name="woocustomemails_settings_name[show_in_admin_email]" value="1" %s />', $checked );
-		echo '<br><span class="description">' . __( 'Add the Custom Messages to Admin emails.', 'woo_custom_emails_domain' ) . '</span>';
-	}
 
-	/**
-	* Display the 'Extra Display Classes' field
-	*/
-	public function display_classes_callback() {
-		$display_classes_setting = '';
-
-		if( isset( $this->options['display_classes'] ) && !empty( $this->options['display_classes'] ) ) {
-			// Data is set
-			$display_classes_setting = $this->options['display_classes'];
-		}
-		printf( '<textarea id="display_classes" name="woocustomemails_settings_name[display_classes]" class="fullwidth-text">%s</textarea>', $display_classes_setting );
-		echo '<br><span class="description">' . __( 'Allows you to specify other non-default product types which can be used with WCEPP.<br>Should be a comma-separated list.<br><b>Example:</b><pre>show_if_booking, show_if_grouped</pre>', 'woo_custom_emails_domain' ) . '</span>';
-	}
-
-	/**
-	* Display the 'Show Old 1.x Legacy Content' checkbox
-	*/
-	public function show_old_customcontent_callback() {
-		$checked = '';
-		$show_old_content = '';
-		if( ! isset( $this->options['show_old_customcontent'] ) ) {
-			// Data not set
-			$this->options['show_old_customcontent'] = false;
-		} else {
-			// Data is set
-			$checked = 'checked';
-			$show_old_content = $this->options['show_old_customcontent'];
-		}
-	    printf( '<input type="checkbox" id="show_old_customcontent" name="woocustomemails_settings_name[show_old_customcontent]" value="1" %s />', $checked );
-		echo '<br><span class="description">' . __( 'Adds a section in the Product Data "Custom Emails" Tab to display content from older 1.x versions of the plugin. You can use this tool to Copy/Paste older email content into a new WCE Message.', 'woo_custom_emails_domain' ) . '</span>';
-	}
+	// /**
+	// * Register and add Settings
+	// *
+	// * @since 2.1.0
+	// */
+	// public function woocustomemails_settings_init() {
+	//
+	// 	// Register Settings
+	// 	register_setting(
+	//         'woocustomemails_settings_group', // Option group
+	//         'woocustomemails_settings_name', // Option name
+	//         array( $this, 'sanitize' ) // Sanitize
+	//     );
+	//
+	// 	// Show Section: Admin Options.
+	// 	add_settings_section(
+	// 		'wce_admin_options_section', // ID
+	// 		'Admin Options', // Title
+	// 		array( $this, 'print_admin_section_info' ), // Callback
+	// 		'woocustomemails_settings_page' // Page
+	// 	);
+	//
+	// 	// Show Section: Display Settings.
+	// 	add_settings_section(
+	// 		'wce_display_settings_section', // ID
+	// 		'Display Settings', // Title
+	// 		array( $this, 'print_display_section_info' ), // Callback
+	// 		'woocustomemails_settings_page' // Page
+	// 	);
+	//
+	// 	// Display the sections based on the active tab.
+    //     if ( isset( $_GET["tab"] ) ) {
+	//
+    //         if ( $_GET["tab"] == "admin-options" ) {
+	//
+	// 			// // Field - Add Test Data.
+	// 			// add_settings_field(
+	// 		    //     'add_testdata_row', // ID
+	// 		    //     __('Add Test Data', 'woo_custom_emails_domain'), // Title
+	// 		    //     array( $this, 'add_testrow_callback' ), // Callback
+	// 		    //     'woocustomemails_settings_page', // Page
+	// 		    //     'wce_admin_options_section' // Section
+	// 	        // );
+	//
+    //         } else {
+	//
+	// 			// Field - Include Custom Message in Admin Emails
+	// 			add_settings_field(
+	// 		        'show_in_admin_email', // ID
+	// 		        __('Include Custom Message in Admin Emails', 'woo_custom_emails_domain'), // Title
+	// 		        array( $this, 'show_in_admin_email_callback' ), // Callback
+	// 		        'woocustomemails_settings_page', // Page
+	// 		        'wce_display_settings_section' // Section
+	// 	        );
+	//
+	// 			// SEPARATOR
+	// 			add_settings_field(
+	// 		        'separator-1', // ID
+	// 		        '', // Title
+	// 		        function(){ echo '<hr>'; }, // Callback
+	// 		        'woocustomemails_settings_page', // Page
+	// 		        'wce_display_settings_section' // Section
+	// 	        );
+	//
+	// 			// Field - Display Classes
+	// 			add_settings_field(
+	// 		        'display_classes', // ID
+	// 		        __('Display for Other Product Types', 'woo_custom_emails_domain'), // Title
+	// 		        array( $this, 'display_classes_callback' ), // Callback
+	// 		        'woocustomemails_settings_page', // Page
+	// 		        'wce_display_settings_section' // Section
+	// 	        );
+	//
+    //         }
+	//
+    //     } else {
+	//
+	// 		// Field - Include Custom Message in Admin Emails
+	// 		add_settings_field(
+	// 			'show_in_admin_email', // ID
+	// 			__('Include Custom Message in Admin Emails', 'woo_custom_emails_domain'), // Title
+	// 			array( $this, 'show_in_admin_email_callback' ), // Callback
+	// 			'woocustomemails_settings_page', // Page
+	// 			'wce_display_settings_section' // Section
+	// 		);
+	//
+	// 		// SEPARATOR
+	// 		add_settings_field(
+	// 			'separator-1', // ID
+	// 			'', // Title
+	// 			function(){ echo '<hr>'; }, // Callback
+	// 			'woocustomemails_settings_page', // Page
+	// 			'wce_display_settings_section' // Section
+	// 		);
+	//
+	// 		// Field - Display Classes
+	// 		add_settings_field(
+	// 			'display_classes', // ID
+	// 			__('Display for Other Product Types', 'woo_custom_emails_domain'), // Title
+	// 			array( $this, 'display_classes_callback' ), // Callback
+	// 			'woocustomemails_settings_page', // Page
+	// 			'wce_display_settings_section' // Section
+	// 		);
+	//
+    //     }
+	//
+	// }
+	//
+	// /**
+	// * Sanitize each setting field as needed
+	// *
+	// * @param array $input Contains all settings fields as array keys
+	// */
+	// public function sanitize( $input ) {
+	// 	$new_input = array();
+	//
+	// 	// Save 'Include Custom Message in Admin Emails'
+	// 	if ( isset( $input['show_in_admin_email'] ) ) {
+	// 	    $new_input['show_in_admin_email'] = sanitize_text_field( $input['show_in_admin_email'] );
+	// 	} else {
+	// 		$new_input['show_in_admin_email'] = '';
+	// 	}
+	//
+	// 	// Save 'Display Classes'
+	// 	if ( isset( $input['display_classes'] ) ) {
+	// 	    $new_input['display_classes'] = sanitize_text_field( $input['display_classes'] );
+	// 	} else {
+	// 		$new_input['display_classes'] = '';
+	// 	}
+	//
+	// 	return $new_input;
+	// }
+	//
+	// /**
+	// * Print the Display Section text
+	// */
+	// public function print_display_section_info() {
+	// 	echo '<p style="margin-top: 20px;">' . __( 'Configure the display settings for Woo Custom Emails custom messages.', 'woo_custom_emails_domain' ) . '</p>';
+	// }
+	//
+	// // Display Admin Options section info.
+	// public function print_admin_section_info() {
+	// 	echo '<p style="margin-top: 20px;">Admin Options and the "Assigned Messages" feature will be coming soon in a future release!</p>';
+	// }
+	//
+	// /**
+	// * Display the 'Include Custom Message in Admin Emails' field
+	// */
+	// public function show_in_admin_email_callback() {
+	// 	$checked = '';
+	// 	$show_in_admin_emails = '';
+	// 	if( ! isset( $this->options['show_in_admin_email'] ) ) {
+	// 		// Data not set
+	// 		$this->options['show_in_admin_email'] = false;
+	// 	} else {
+	// 		// Data is set
+	// 		$checked = 'checked';
+	// 		$show_in_admin_emails = $this->options['show_in_admin_email'];
+	// 	}
+	// 	printf( '<input type="checkbox" id="show_in_admin_email" name="woocustomemails_settings_name[show_in_admin_email]" value="1" %s /><b>%s</b>', $checked, __( 'Include in Admin Emails', 'woo_custom_emails_domain' ) );
+	// 	echo '<br><span class="description">' . __( 'Show the Custom Messages content inside Admin order notification emails.', 'woo_custom_emails_domain' ) . '</span>';
+	// }
+	//
+	// /**
+	// * Display the 'Extra Display Classes' field
+	// */
+	// public function display_classes_callback() {
+	// 	$display_classes_setting = '';
+	//
+	// 	if( isset( $this->options['display_classes'] ) && !empty( $this->options['display_classes'] ) ) {
+	// 		// Data is set
+	// 		$display_classes_setting = $this->options['display_classes'];
+	// 	}
+	// 	printf( '<textarea id="display_classes" name="woocustomemails_settings_name[display_classes]" class="fullwidth-text">%s</textarea>', $display_classes_setting );
+	//
+	// 	// Description.
+	// 	echo '<div class="description" style="margin-top: 20px;">' . __( 'By default, WooCommerce <b>only</b> shows the \'Custom Emails\' tab for the standard \'product\' post type.<br>Use this option to specify other product post types which will show the Custom Emails tab. This should be a comma-separated list.', 'woo_custom_emails_domain' ) . '</div>';
+	//
+	// 	// Code example;
+	// 	echo '<div class="description" style="margin-top: 20px; margin-left: 30px;"><b>Example:</b><pre>show_if_booking, show_if_grouped</pre></div>';
+	//
+	// 	// Instructions to find CSS Class.
+	// 	echo '<div class="description" style="margin-top: 20px;">' . __( '<b>How to Find the CSS Class for a Custom Product</b><br>To find the class for your product type, do the following:', 'woo_custom_emails_domain' );
+	// 	echo '<ol>';
+	// 	echo __( '<li>Go to <b>Products</b>, and Edit a custom product</li>', 'woo_custom_emails_domain' );
+	// 	echo __( '<li>Scroll down to the <b>Product Data</b> table</li>', 'woo_custom_emails_domain' );
+	// 	echo __( '<li><b>Inspect the code</b> for a tab menu item, like <b>Inventory</b> (or any menu item which appears only for your product type)</li>', 'woo_custom_emails_domain' );
+	// 	echo __( '<li>Find the custom CSS class for your product type which is assigned to that tab menu item. These classes usually start with <b>show_if_</b> -- ex: "show_if_booking"</li>', 'woo_custom_emails_domain' );
+	// 	echo __( '<li>Copy and paste that CSS class into the field above</li>', 'woo_custom_emails_domain' );
+	// 	echo __( '<li>Save your settings</li>', 'woo_custom_emails_domain' );
+	// 	echo '</ol>';
+	// 	echo '</div>';
+	//
+	// 	// Note text.
+	// 	echo '<div style="margin-top: 20px; padding: 20px; border: 1px solid rgba(0,0,0,0.15);"><b style="color: #ff0000;">' . __( 'Please Note:</b> This feature is experimental and is not guaranteed to work.<br>Some WooCommerce add-ons use their own method of sending emails, outside of the normal WooCommerce process this plugin uses.', 'woo_custom_emails_domain' ) . '</div>';
+	// }
 
 }
+
+add_action( 'plugins_loaded', function() { new Woo_Custom_Emails_Per_Product_Admin_Settings(); } );

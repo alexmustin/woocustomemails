@@ -33,7 +33,7 @@ class Woo_Custom_Emails_Per_Product {
 
 		$this->loader->add_action( 'admin_head-post.php', $woo_product_data_admin, 'wce_custom_admin_style' );
 		$this->loader->add_action( 'admin_head-post-new.php', $woo_product_data_admin, 'wce_custom_admin_style' );
-		$this->loader->add_action( 'admin_print_styles-edit.php', $woo_product_data_admin, 'wce_custom_admin_style' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $woo_product_data_admin, 'wce_enqueue_custom_admin_style' );
 		$this->loader->add_action( 'woocommerce_product_data_tabs', $woo_product_data_admin, 'add_woo_custom_emails_tab' );
 		$this->loader->add_action( 'woocommerce_product_data_panels', $woo_product_data_admin, 'add_woo_custom_emails_tab_fields' );
 		$this->loader->add_action( 'woocommerce_process_product_meta', $woo_product_data_admin, 'save_woo_custom_emails_tab_fields' );

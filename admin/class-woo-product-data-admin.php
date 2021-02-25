@@ -50,6 +50,21 @@ class Woo_Product_Data_Admin {
 
 	}
 
+	public function wce_enqueue_custom_admin_style() {
+
+		global $pagenow;
+
+		if ( $pagenow !== 'edit.php' ) {
+			return;
+		}
+
+		wp_register_style( 'wcepp_custom_admin_css', plugins_url( 'woocustomemails-admin-styles.css', __FILE__ ), '1.0', false );
+        wp_enqueue_style( 'wcepp_custom_admin_css' );
+
+		include_once( dirname(__FILE__) . '/woocustomemails-admin-styles.css' );
+
+	}
+
 	// Setup 'Custom Emails' Product Data tab
 	public function add_woo_custom_emails_tab_fields() {
 
@@ -57,13 +72,7 @@ class Woo_Product_Data_Admin {
 
 		// Get WCE Settings
 		$this->options = get_option( 'woocustomemails_settings_name' );
-		if( ! isset( $this->options['show_old_customcontent'] ) ) {
-			// Data not set
-			$show_old_content = false;
-		} else {
-			// Data is set
-			$show_old_content = $this->options['show_old_customcontent'];
-		}
+		$show_old_content = false;
 
 		// Get Meta from this Post
 		$this_product_id = get_the_ID();
@@ -72,28 +81,7 @@ class Woo_Product_Data_Admin {
 		// Note the 'id' attribute MUST match the 'target' parameter set above.
 		?>
 		<div id='woo_custom_emails_product_data' class='panel woocommerce_options_panel'>
-			<?php
-			if ( ! empty( $show_old_content ) ) {
-			?>
-				<div class='options_group'>
-					<?php
 
-					// Show Legacy v1.x Custom Content
-					if ( ! empty( $customcontent_meta ) ) {
-						?>
-						<p class="form-field old-customcontent">
-							<label for="old-customcontent-meta"><?php echo __( 'Legacy Custom Content:', 'woocommerce' ); ?><br><?php echo __( '(disabled)', 'woocommerce' ); ?></label>
-							<a href="#" class="button show-oldcustomcontent"><span class="dashicons dashicons-visibility"></span> <?php echo __('Show Content', 'woocommerce'); ?></a>
-							<a href="#" class="button hide-oldcustomcontent hide"><span class="dashicons dashicons-hidden"></span> <?php echo __('Hide Content', 'woocommerce'); ?></a>
-							<textarea disabled name="old-customcontent-meta" id="old-customcontent-meta" class="hide"><?php echo $customcontent_meta; ?></textarea>
-						<?php
-					}
-
-					?>
-				</div>
-			<?php
-			}
-			?>
 
 			<!-- // 2.2.0
 			************************************************************* // -->

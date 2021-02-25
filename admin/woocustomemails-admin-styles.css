@@ -1,7 +1,14 @@
 <style>
+/* WCE SETTINGS PAGE
+---------------------------------------------- */
+textarea#display_classes {
+    width: 100%;
+    max-width: 300px;
+    height: 60px;
+}
 
 /* WCE MESSAGES EDIT PAGE
---------------------- */
+---------------------------------------------- */
 
 th.column-messageid,
 td.column-messageid {
@@ -9,7 +16,7 @@ td.column-messageid {
 }
 
 /* WOO PRODUCT EDIT PAGE
---------------------- */
+---------------------------------------------- */
 
 #woocommerce-product-data ul.wc-tabs li.woo-custom-emails_options a:before {
     font-family: WooCommerce;
@@ -309,93 +316,138 @@ a.wce-search-result {
 }
 
 /* WCE ASSIGNED MESSAGES PAGE
---------------------- */
-.woocustomemails_page_woocustomemails_assigned .post-count {
+---------------------------------------------- */
+/* .woocustomemails_page_woocustomemails_assigned .post-count {
     margin: 30px 0;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table {
+.wp-list-table {
     width: 100%;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table thead.header {
+.wp-list-table thead.header {
     background-color: rgba(0,0,0,0.15);
     font-weight: bold;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table tbody tr:nth-child(even) {
+.wp-list-table tbody tr:nth-child(even) {
     background-color: rgba(0,0,0,0.05);
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td {
+.wp-list-table td {
     padding: 5px;
     text-align: left;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table tbody td {
-    vertical-align: top;
-}
-
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table tbody td > div {
+.wp-list-table tbody td > div {
     padding: 5px;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.product-count,
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus {
+.wp-list-table td.product-count,
+.wp-list-table td.orderstatus {
     text-align: center;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-title > div,
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus > div,
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-templatelocation > div {
+.wp-list-table td.producttitle > div,
+.wp-list-table td.assignedmsgs > div,
+.wp-list-table td.orderstatus > div,
+.wp-list-table td.msglocation > div {
     margin-top: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-title > div:first-child,
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus > div:first-child,
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-templatelocation > div:first-child {
+.wp-list-table td.producttitle > div:first-child,
+.wp-list-table td.assignedmsgs > div:first-child,
+.wp-list-table td.orderstatus > div:first-child,
+.wp-list-table td.msglocation > div:first-child {
     margin-top: 0;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.product-title a {
+.wp-list-table td.producttitle a {
     display: flex;
     flex-direction: row;
     align-items: center;
     font-weight: bold;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.product-title a img {
+.wp-list-table td.producttitle a img {
     display: block;
     width: 30px;
     height: 30px;
     margin-right: 10px;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus > span {
-    padding: 5px 10px;
+.wp-list-table td.orderstatus div {
     border-radius: 3px;
-    margin: 0.5em 1em;
+}
+
+.wp-list-table td.orderstatus span {
+    padding: 0px 10px;
+    margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline-flex;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus .on-hold {
+.wp-list-table td.orderstatus .on-hold {
     background: #f8dda7;
     color: #94660c;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus .processing {
+.wp-list-table td.orderstatus .processing {
     background: #c6e1c6;
     color: #5b841b;
 }
 
-.woocustomemails_page_woocustomemails_assigned .assigned-wce-messages table td.assigned-message-orderstatus .completed {
+.wp-list-table td.orderstatus .completed {
     background: #c8d7e1;
     color: #2e4453;
 }
+
+.wp-list-table td,
+.wp-list-table th.check-column {
+    vertical-align: middle;
+}
+
+.wp-list-table .column-ID {
+    width: 50px;
+}
+
+.wp-list-table .column-thumb {
+    width: 5%;
+    text-align: center;
+}
+
+.wp-list-table .column-thumb .thumb {
+    width: 60px;
+    height: auto;
+}
+
+.wp-list-table .column-producttitle {
+    width: 25%;
+}
+
+.wp-list-table .column-producttitle .product-title {
+    width: auto;
+    font-weight: bold;
+}
+
+.wp-list-table .column-producttitle .row-actions {
+    width: auto;
+}
+
+.wp-list-table .column-assignedmsgs {
+    width: 30%;
+}
+
+.wp-list-table .column-orderstatus {
+    width: 10%;
+}
+
+.wp-list-table .column-msglocation {
+    width: 15%;
+} */
 
 </style>
