@@ -55,6 +55,9 @@ If you are having any issues, please post in the Support Forum.
 
 ## Changelog
 
+### 2.2.9 - (May 2, 2021)
+* FIX: Fixes an error when saving on the WCE Settings page: "WordPress Error: Options page ___ not found in allowed options list"
+
 ### 2.2.8 - (Feb 24, 2021)
 * FIX: Fixes a PHP 7.4 error: "Notice: Trying to access array offset on value of type bool in..."
 * UPDATE: WCE Settings page: now with Tabs. The page now uses the default WordPress Settings API for a cleaner look.

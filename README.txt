@@ -7,8 +7,8 @@ Tags: email, template, product, receipt, woo, woocommerce
 Requires at least: 5.4
 Tested up to: 5.6.2
 Requires PHP: 7.2
-Stable tag: 2.2.8
-Version: 2.2.8
+Stable tag: 2.2.9
+Version: 2.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,9 @@ If you are having any issues, please post in the Support Forum.
 8. Woo Custom Emails Settings page
 
 == Changelog ==
+
+= 2.2.9 - (May 2, 2021) =
+* FIX: Fixes an error when saving on the WCE Settings page: "WordPress Error: Options page ___ not found in allowed options list"
 
 = 2.2.8 - (Feb 24, 2021) =
 * FIX: Fixes a PHP 7.4 error: "Notice: Trying to access array offset on value of type bool in..."
