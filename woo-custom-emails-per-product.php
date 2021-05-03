@@ -9,7 +9,7 @@
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * WC requires at least: 4.9.2
- * WC tested up to: 5.0.0
+ * WC tested up to: 5.2.2
  *
  * @package woo_custom_emails_domain
  */

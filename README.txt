@@ -5,7 +5,7 @@ Author URI: https://alexmustin.com/
 Donate link: https://venmo.com/Alex-Mustin
 Tags: email, template, product, receipt, woo, woocommerce
 Requires at least: 5.4
-Tested up to: 5.6.2
+Tested up to: 5.7.1
 Requires PHP: 7.2
 Stable tag: 2.2.9
 Version: 2.2.9
