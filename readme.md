@@ -1,4 +1,4 @@
-# Woo Custom Emails Per Product
+# WC Custom Emails Per Product
 
 > Easily add custom content for each product into the default WooCommerce receipt emails.
 
@@ -36,7 +36,7 @@ This section describes how to install the plugin and get it working.
 At this time, the plugin is developed to only modify emails sent for the default WooCommerce "product" post type. You may be able to experiment and use this plugin with other product post types -- see the instructions under "Display for Other Product Types" under the WCE Settings page.
 
 ### Why don't the Custom Messages appear when I search?
-There is a known bug with the Loom browser extension, where it interrupts the AJAX search. If you are using the Loom browser extension, please disable it while using Woo Custom Emails Per Product.
+There is a known bug with the Loom browser extension, where it interrupts the AJAX search. If you are using the Loom browser extension, please disable it while using WC Custom Emails Per Product.
 
 If this is not the case, there could be another plugin interfering with the AJAX search. Please check your browser console for any errors.
 
