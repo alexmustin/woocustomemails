@@ -1,14 +1,14 @@
-=== Woo Custom Emails Per Product ===
+=== WC Custom Emails Per Product ===
 Contributors: alexmustin
 Author: alexmustin
 Author URI: https://alexmustin.com/
 Donate link: https://venmo.com/Alex-Mustin
 Tags: email, template, product, receipt, woo, woocommerce
 Requires at least: 5.4
-Tested up to: 5.7.1
-Requires PHP: 7.2
-Stable tag: 2.2.9
-Version: 2.2.9
+Tested up to: 5.9.2
+Requires PHP: 7.4
+Stable tag: 2.2.10
+Version: 2.2.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,7 +48,7 @@ This section describes how to install the plugin and get it working.
 At this time, the plugin is developed to only modify emails sent for the default WooCommerce "product" post type. You may be able to experiment and use this plugin with other product post types -- see the instructions under "Display for Other Product Types" under the WCE Settings page.
 
 = Why don't the Custom Messages appear when I search? =
-There is a known bug with the Loom browser extension, where it interrupts the AJAX search. If you are using the Loom browser extension, please disable it while using Woo Custom Emails Per Product.
+There is a known bug with the Loom browser extension, where it interrupts the AJAX search. If you are using the Loom browser extension, please disable it while using WC Custom Emails Per Product.
 
 If this is not the case, there could be another plugin interfering with the AJAX search. Please check your browser console for any errors.
 
@@ -74,9 +74,12 @@ If you are having any issues, please post in the Support Forum.
 5. Custom Message in the Customer email
 6. Custom Message in the Admin email
 7. Assigned Messages page
-8. Woo Custom Emails Settings page
+8. 'Custom Emails' Settings page
 
 == Changelog ==
+
+= 2.2.10 - (Mar 24, 2022) =
+* UPDATE: Compatible with WordPress 5.9.2 and WooCommerce 6.3.1
 
 = 2.2.9 - (May 2, 2021) =
 * FIX: Fixes an error when saving on the WCE Settings page: "WordPress Error: Options page ___ not found in allowed options list"

@@ -1,81 +1,108 @@
 <?php
 /**
- * Responsible for rendering the WooCommerce Product Data admin settings
+ * Renders the WooCommerce Product Data admin settings.
  *
- * @package woo_custom_emails_domain\admin
+ * @package woo_custom_emails
  */
 
+/**
+ * Woo_Product_Data_Admin is a class for adding the Custom Email Admin settings for each Product.
+ */
 class Woo_Product_Data_Admin {
 
-	private $version;
+	/**
+	 * Track the plugin version.
+	 *
+	 * @var string $version The version number.
+	 */
+	protected $version;
 
+	/**
+	 * Creates a new Tab in the WC Product settings section.
+	 *
+	 * @param object $original_prodata_tabs  An object containing the Settings Tabs.
+	 */
 	public function add_woo_custom_emails_tab( $original_prodata_tabs ) {
+
 		$this->options = get_option( 'woocustomemails_settings_name' );
+
 		$display_classes_default = 'show_if_simple, show_if_variable, show_if_external, show_if_downloadable, show_if_grouped';
 		$display_classes_setting = '';
 
-		if( isset( $this->options['display_classes'] ) ) {
-			// Data is set
+		if ( isset( $this->options['display_classes'] ) ) {
+			// Data is set.
 			$display_classes_setting = $display_classes_default . ', ' . $this->options['display_classes'];
 		} else {
-			// No Data set
+			// No Data set.
 			$display_classes_setting = $display_classes_default;
 		}
 
-		// Remove whitespace
-		$display_classes_setting = str_replace(' ', '', $display_classes_setting);
+		// Remove whitespace.
+		$display_classes_setting = str_replace( ' ', '', $display_classes_setting );
 
-		// Turn string into array
-		$display_classes_arr = explode(",", $display_classes_setting);
+		// Turn the string into an array.
+		$display_classes_arr = explode( ',', $display_classes_setting );
 
 		$new_custom_tab['woo-custom-emails'] = array(
-			'label' => __( 'Custom Emails', 'woocommerce' ),
+			'label'  => __( 'Custom Emails', 'woo_custom_emails_domain' ),
 			'target' => 'woo_custom_emails_product_data',
-			'class' => $display_classes_arr,
+			'class'  => $display_classes_arr,
 		);
 
-		$insert_at_position = 2; // position in tab list
+		$insert_at_position = 2; // Set the position in the tab list.
 
-		$tabs = array_slice( $original_prodata_tabs, 0, $insert_at_position, true ); // Split the tabs into an array, then keep the first part up until our position number
-		$tabs = array_merge( $tabs, $new_custom_tab ); // Add our new tab into the array
-		$tabs = array_merge( $tabs, array_slice( $original_prodata_tabs, $insert_at_position, null, true ) ); // Append the last part of tabs array
+		// Split the tabs into an array, then keep the first part up until our position number.
+		$tabs = array_slice( $original_prodata_tabs, 0, $insert_at_position, true );
+
+		// Add our new tab into the array.
+		$tabs = array_merge( $tabs, $new_custom_tab );
+
+		// Append the last part of tabs array.
+		$tabs = array_merge( $tabs, array_slice( $original_prodata_tabs, $insert_at_position, null, true ) );
 
 		return $tabs;
 
 	}
 
+	/**
+	 * Adds the custom Admin stylesheet.
+	 */
 	public function wce_custom_admin_style() {
-
-		include_once( dirname(__FILE__) . '/woocustomemails-admin-styles.css' );
-
+		include_once dirname( __FILE__ ) . '/woocustomemails-admin-styles.css';
 	}
 
+	/**
+	 * Enqueues the custom Admin stylesheet.
+	 */
 	public function wce_enqueue_custom_admin_style() {
 
 		global $pagenow;
 
-		if ( $pagenow !== 'edit.php' ) {
+		// If we are not on the Edit page, exit the function.
+		if ( 'edit.php' !== $pagenow ) {
 			return;
 		}
 
-		wp_register_style( 'wcepp_custom_admin_css', plugins_url( 'woocustomemails-admin-styles.css', __FILE__ ), '1.0', false );
-        wp_enqueue_style( 'wcepp_custom_admin_css' );
+		wp_register_style( 'wcepp_custom_admin_css', plugins_url( 'woocustomemails-admin-styles.css', __FILE__ ), null, '1.0' );
+		wp_enqueue_style( 'wcepp_custom_admin_css' );
 
-		include_once( dirname(__FILE__) . '/woocustomemails-admin-styles.css' );
+		include_once dirname( __FILE__ ) . '/woocustomemails-admin-styles.css';
 
 	}
 
-	// Setup 'Custom Emails' Product Data tab
+	/**
+	 * Adds fields to the 'Custom Emails' Product Data tab.
+	 */
 	public function add_woo_custom_emails_tab_fields() {
 
 		global $post;
 
-		// Get WCE Settings
-		$this->options = get_option( 'woocustomemails_settings_name' );
+		// Get WCE Settings.
+		$this->options    = get_option( 'woocustomemails_settings_name' );
 		$show_old_content = false;
 
-		// Get Meta from this Post
-		$this_product_id = get_the_ID();
+		// Get Meta from this Post.
+		$this_product_id    = get_the_ID();
 		$customcontent_meta = get_post_meta( $this_product_id, 'custom_content', true );
 
 		// Note the 'id' attribute MUST match the 'target' parameter set above.
@@ -89,244 +116,271 @@ class Woo_Product_Data_Admin {
 
 				<div class="wce-product-options-table">
 
-					<?php
-					$status_title = __('Order Status', 'woocommerce' );
-					$status_tip = __('The Order Status Email which is automatically generated by WooCommerce.', 'woocommerce' );
-					$message_title = __('Custom Email Message', 'woocommerce' );
-					$message_tip = __('Select a Custom Email Message to be displayed in the Order Status email.', 'woocommerce' );
-					$location_title = __('Content Location', 'woocommerce' );
-					$location_tip = __('Select where your custom content will display in the Order Status email.', 'woocommerce' );
-					?>
-
 					<div class="table-header">
 						<div class="status">
-							<?php echo $status_title; ?>
-							<span class="woocommerce-help-tip" data-tip="<?php echo $status_tip; ?>"></span>
+							<?php echo esc_html__( 'Order Status', 'woo_custom_emails_domain' ); ?>
+							<span class="woocommerce-help-tip" data-tip="<?php echo esc_html__( 'The Order Status Email which is automatically generated by WooCommerce.', 'woo_custom_emails_domain' ); ?>"></span>
 						</div>
 						<div class="message">
-							<?php echo $message_title; ?>
-							<span class="woocommerce-help-tip" data-tip="<?php echo $message_tip; ?>"></span>
+							<?php echo esc_html__( 'Custom Email Message', 'woo_custom_emails_domain' ); ?>
+							<span class="woocommerce-help-tip" data-tip="<?php echo esc_html__( 'Select a Custom Email Message to be displayed in the Order Status email.', 'woo_custom_emails_domain' ); ?>"></span>
 						</div>
 						<div class="location">
-							<?php echo $location_title; ?>
-							<span class="woocommerce-help-tip" data-tip="<?php echo $location_tip; ?>"></span>
+							<?php echo esc_html__( 'Content Location', 'woo_custom_emails_domain' ); ?>
+							<span class="woocommerce-help-tip" data-tip="<?php echo esc_html__( 'Select where your custom content will display in the Order Status email.', 'woo_custom_emails_domain' ); ?>"></span>
 						</div>
 						<?php
-						// TODO: Add "PREVIEW" page link to show users what the Custom Email will look like
+						// TODO: Add "PREVIEW" page link to show users what the Custom Email will look like.
 						?>
 					</div>
 
 					<?php
 					$customcontent_orderstatus = get_post_meta( $this_product_id, 'order_status', true );
-					$customcontent_location = get_post_meta( $this_product_id, 'location', true );
+					$customcontent_location    = get_post_meta( $this_product_id, 'location', true );
 
-					/*
-					* Reusable function to return the title of a WCE Message
-					*/
-					function getMessageTitle( $msgID = 0, $statusName = '' ) {
+					/**
+					 * Returns the title of a Custom Email Message.
+					 *
+					 * @param  integer $msg_id  The id of the message.
+					 * @param  string  $status_name  The name of the Status Message.
+					 * @return string  $return_str  [description]
+					 */
+					function get_message_title( $msg_id = 0, $status_name = '' ) {
 
-						$wcemessage_title = get_the_title( $msgID );
-						$editURL = admin_url('post.php?post='.$msgID.'&action=edit');
-						$editBtn = '<a href="'.$editURL.'" target="_blank" class="button edit-wcemessage" alt="'.__('Edit','woocommerce').'" title="'.__('Edit','woocommerce').'"><span class="dashicons dashicons-edit"></span></a>';
+						$wcemessage_title = get_the_title( $msg_id );
+						$edit_url         = admin_url( 'post.php?post=' . $msg_id . '&action=edit' );
+						$edit_btn         = '<a href="' . $edit_url . '" target="_blank" class="button edit-wcemessage" alt="' . __( 'Edit', 'woo_custom_emails_domain' ) . '" title="' . __( 'Edit', 'woo_custom_emails_domain' ) . '"><span class="dashicons dashicons-edit"></span></a>';
 
 						// Check if this message is Published.
-						if ( get_post_status( $msgID ) !== 'publish' ) {
+						if ( get_post_status( $msg_id ) !== 'publish' ) {
 							// Saved WCE Message is not published, show Invalid message.
-							$wcemessage_saved_text = '(' . __('Invalid Message Selected', 'woocommerce') . ')';
+							$wcemessage_saved_text = '(' . __( 'Invalid Message Selected', 'woo_custom_emails_domain' ) . ')';
 						} else {
 							// Saved WCE Message is published.
 							$wcemessage_saved_text = $wcemessage_title . '';
 						}
 
-						$defaultSearchMsg = __( 'Search Custom Messages...', 'woocommerce' );
-						$returnStr = '<input class="wcemessage_search_field_input" type="text" value="'.$wcemessage_saved_text.'" name="wcemessage_search_'.$statusName.'" id="wcemessage_search_'.$statusName.'" placeholder="'. $defaultSearchMsg .'" autocomplete="off"></input>';
-						return $returnStr;
+						$default_search_msg = __( 'Search Custom Messages...', 'woo_custom_emails_domain' );
+
+						$return_str = '<input class="wcemessage_search_field_input" type="text" value="' . $wcemessage_saved_text . '" name="wcemessage_search_' . $status_name . '" id="wcemessage_search_' . $status_name . '" placeholder="' . $default_search_msg . '" autocomplete="off"></input>';
+
+						$return_str .= wp_nonce_field( 'ajax_nonce_action', 'ajax_nonce' );
+
+						return $return_str;
 
 					}
 
-					/*
-					* Reusable function to display the saved WCE Message
-					*/
-					function showSavedMessage( $statusName = '' ) {
+					/**
+					 * Displays a Custom Email Message.
+					 *
+					 * @param  string $status_name  The name of the Status message.
+					 * @return void
+					 */
+					function show_saved_message( $status_name = '' ) {
 
-						// set Status "slug"
-						if ($statusName == 'onhold'){
-							$statusSlug = 'on-hold';
+						// Set the Status "slug".
+						if ( 'onhold' === $status_name ) {
+							$status_slug = 'on-hold';
 						} else {
-							$statusSlug = $statusName;
+							$status_slug = $status_name;
 						}
 
-						$postID = get_the_ID();
-						$wcemessage_id = get_post_meta( $postID, 'wcemessage_id', true );
-						$wcemessage_id_currentStatus = '';
-						$wcemessage_id_currentStatus = get_post_meta( $postID, 'wcemessage_id_'.$statusName, true );
-						$wcemessage_controls = '';
-						$customcontent_orderstatus = '';
-						$customcontent_orderstatus = get_post_meta( $postID, 'order_status', true );
+						$post_id                     = get_the_ID();
+						$wcemessage_id               = get_post_meta( $post_id, 'wcemessage_id', true );
+						$wcemessage_id_currentstatus = '';
+						$wcemessage_id_currentstatus = get_post_meta( $post_id, 'wcemessage_id_' . $status_name, true );
+						$wcemessage_controls         = '';
+						$customcontent_orderstatus   = '';
+						$customcontent_orderstatus   = get_post_meta( $post_id, 'order_status', true );
 
-						$extraBtnContainerOpen = '<div class="button-container">';
-						$extraBtnContainerOpenRemoveEdit = '<div class="button-container remove edit">';
-						$extraBtnContainerClose = '</div>';
+						$extra_btn_container_open             = '<div class="button-container">';
+						$extra_btn_container_open_remove_edit = '<div class="button-container remove edit">';
+						$extra_btn_container_close            = '</div>';
+
+						$kses_allowed_html = array(
+							'a'     => array(
+								'alt'    => array(),
+								'class'  => array(),
+								'href'   => array(),
+								'target' => array(),
+								'title'  => array(),
+							),
+							'div'   => array(
+								'class' => array(),
+							),
+							'input' => array(
+								'autocomplete' => array(),
+								'class'        => array(),
+								'id'           => array(),
+								'name'         => array(),
+								'placeholder'  => array(),
+								'type'         => array(),
+								'value'        => array(),
+							),
+							'span'  => array(
+								'class' => array(),
+							),
+						);
 
 						?>
 						<div class="form-field wcemessage_search_field">
 							<?php
-							// if NEW 2.2.0 data is saved for this Order Status
-							if ( !empty( $wcemessage_id_currentStatus ) ) {
+							// If NEW 2.2.0 data is saved for this Order Status.
+							if ( ! empty( $wcemessage_id_currentstatus ) ) {
 
-								echo getMessageTitle( $wcemessage_id_currentStatus, $statusName );
+								echo wp_kses( get_message_title( $wcemessage_id_currentstatus, $status_name ), $kses_allowed_html );
 
-								$editURL = admin_url('post.php?post='.$wcemessage_id_currentStatus.'&action=edit');
-								$editBtn = '<a href="'.$editURL.'" target="_blank" class="button edit-wcemessage" alt="'.__('Edit','woocommerce').'" title="'.__('Edit','woocommerce').'"><span class="dashicons dashicons-edit"></span></a>';
-								$removeBtn = '<a href="#" class="button remove-wcemessage" alt="'.__('Remove','woocommerce').'" title="'.__('Remove','woocommerce').'"><span class="dashicons dashicons-no"></span></a>';
+								$edit_url   = admin_url( 'post.php?post=' . $wcemessage_id_currentstatus . '&action=edit' );
+								$edit_btn   = '<a href="' . $edit_url . '" target="_blank" class="button edit-wcemessage" alt="' . __( 'Edit', 'woo_custom_emails_domain' ) . '" title="' . __( 'Edit', 'woo_custom_emails_domain' ) . '"><span class="dashicons dashicons-edit"></span></a>';
+								$remove_btn = '<a href="#" class="button remove-wcemessage" alt="' . __( 'Remove', 'woo_custom_emails_domain' ) . '" title="' . __( 'Remove', 'woo_custom_emails_domain' ) . '"><span class="dashicons dashicons-no"></span></a>';
 
-								$wcemessage_controls = $extraBtnContainerOpenRemoveEdit . $removeBtn . $editBtn . $extraBtnContainerClose;
+								$wcemessage_controls = $extra_btn_container_open_remove_edit . $remove_btn . $edit_btn . $extra_btn_container_close;
 
 							} else {
 
-								// if previous data is saved for this Order Status
-								if ( $customcontent_orderstatus == ( 'woocommerce_order_status_'.$statusSlug ) ) {
+								// If previous data is saved for this Order Status...
+								if ( ( 'woocommerce_order_status_' . $status_slug ) === $customcontent_orderstatus ) {
 
-									// Check if a message ID has been assigned
-									if ( !empty( $wcemessage_id ) ){
+									// Check if a message ID has been assigned.
+									if ( ! empty( $wcemessage_id ) ) {
 
-										$wcemessage_title = get_the_title( $wcemessage_id );
-										$editURL = admin_url('post.php?post='.$wcemessage_id.'&action=edit');
-										$editBtn = '<a href="'.$editURL.'" target="_blank" class="button edit-wcemessage" alt="'.__('Edit','woocommerce').'" title="'.__('Edit','woocommerce').'"><span class="dashicons dashicons-edit"></span></a>';
-										$removeBtn = '<a href="#" class="button remove-wcemessage" alt="'.__('Remove','woocommerce').'" title="'.__('Remove','woocommerce').'"><span class="dashicons dashicons-no"></span></a>';
-										$wcemessage_controls = $extraBtnContainerOpenRemoveEdit . $removeBtn . $editBtn . $extraBtnContainerClose;
+										$wcemessage_title    = get_the_title( $wcemessage_id );
+										$edit_url            = admin_url( 'post.php?post=' . $wcemessage_id . '&action=edit' );
+										$edit_btn            = '<a href="' . $edit_url . '" target="_blank" class="button edit-wcemessage" alt="' . __( 'Edit', 'woo_custom_emails_domain' ) . '" title="' . __( 'Edit', 'woo_custom_emails_domain' ) . '"><span class="dashicons dashicons-edit"></span></a>';
+										$remove_btn          = '<a href="#" class="button remove-wcemessage" alt="' . __( 'Remove', 'woo_custom_emails_domain' ) . '" title="' . __( 'Remove', 'woo_custom_emails_domain' ) . '"><span class="dashicons dashicons-no"></span></a>';
+										$wcemessage_controls = $extra_btn_container_open_remove_edit . $remove_btn . $edit_btn . $extra_btn_container_close;
 
-										// Check if this message is Published
+										// Check if this message is Published.
 										if ( get_post_status( $wcemessage_id ) !== 'publish' ) {
-											// Saved WCE Message is not published, show Invalid message
-											$wcemessage_saved_text = '(' . __('Invalid Message Selected', 'woocommerce') . ')';
+											// Saved WCE Message is not published, show Invalid message.
+											$wcemessage_saved_text = '(' . __( 'Invalid Message Selected', 'woo_custom_emails_domain' ) . ')';
 										} else {
-											// Saved WCE Message is published
+											// Saved WCE Message is published.
 											$wcemessage_saved_text = $wcemessage_title . '';
 										}
 										?>
-										<input class="wcemessage_search_field_input" type="text" value="<?php echo $wcemessage_saved_text; ?>" name="wcemessage_search_<?php echo $statusName; ?>" id="wcemessage_search_<?php echo $statusName; ?>" placeholder="<?php echo __( 'Search Custom Messages...', 'woocommerce' ); ?>" autocomplete="off"></input>
+										<input class="wcemessage_search_field_input" type="text" value="<?php echo esc_attr( $wcemessage_saved_text ); ?>" name="wcemessage_search_<?php echo esc_attr( $status_name ); ?>" id="wcemessage_search_<?php echo esc_attr( $status_name ); ?>" placeholder="<?php echo esc_html__( 'Search Custom Messages...', 'woo_custom_emails_domain' ); ?>" autocomplete="off"></input>
 										<?php
 									} else {
-										// Order Status assigned, but No WCE Message assigned = probably not a real world scenario
-										$wcemessage_controls = $extraBtnContainerOpen . $extraBtnContainerClose;
+										// Order Status is assigned, but No WCE Message is assigned = probably not a real world scenario.
+										$wcemessage_controls = $extra_btn_container_open . $extra_btn_container_close;
 										?>
-										<input class="wcemessage_search_field_input" type="text" name="wcemessage_search_<?php echo $statusName; ?>" id="wcemessage_search_<?php echo $statusName; ?>" placeholder="<?php echo __( 'Search Custom Messages...', 'woocommerce' ); ?>" autocomplete="off"></input>
+										<input class="wcemessage_search_field_input" type="text" name="wcemessage_search_<?php echo esc_attr( $status_name ); ?>" id="wcemessage_search_<?php echo esc_attr( $status_name ); ?>" placeholder="<?php echo esc_html__( 'Search Custom Messages...', 'woo_custom_emails_domain' ); ?>" autocomplete="off"></input>
 										<?php
 									}
-
 								} else {
-									// No previous WCE data saved
-									$wcemessage_controls = $extraBtnContainerOpen . $extraBtnContainerClose;
+									// No previous WCE data is saved.
+									$wcemessage_controls = $extra_btn_container_open . $extra_btn_container_close;
 									?>
-									<input class="wcemessage_search_field_input" type="text" name="wcemessage_search_<?php echo $statusName; ?>" id="wcemessage_search_<?php echo $statusName; ?>" placeholder="<?php echo __( 'Search Custom Messages...', 'woocommerce' ); ?>" autocomplete="off"></input>
+									<input class="wcemessage_search_field_input" type="text" name="wcemessage_search_<?php echo esc_attr( $status_name ); ?>" id="wcemessage_search_<?php echo esc_attr( $status_name ); ?>" placeholder="<?php echo esc_html__( 'Search Custom Messages...', 'woo_custom_emails_domain' ); ?>" autocomplete="off"></input>
 									<?php
 								}
-
 							}
 							?>
-							<div class="wcemessage_search_results hide" id="wcemessage_<?php echo $statusName; ?>_search_results">
+							<div class="wcemessage_search_results hide" id="wcemessage_<?php echo esc_attr( $status_name ); ?>_search_results">
 								<div class="wcemessage_search_results_wrap">
-									<p class="placeholder"><?php echo __( 'Search results will appear here', 'woocommerce' ); ?></p>
+									<p class="placeholder"><?php echo esc_html__( 'Search results will appear here', 'woo_custom_emails_domain' ); ?></p>
 								</div>
 							</div>
 						</div>
 						<?php
-						echo $wcemessage_controls;
+						echo wp_kses( $wcemessage_controls, $kses_allowed_html );
 
-						$hiddenFieldVal = '';
+						$hidden_field_val = '';
 
-						// if NEW 2.2.0 data is saved for this Order Status
-						if ( !empty( $wcemessage_id_currentStatus ) ) {
-							$hiddenFieldVal = $wcemessage_id_currentStatus;
-						} else if ( $customcontent_orderstatus == ( 'woocommerce_order_status_'.$statusSlug ) ) {
-							$hiddenFieldVal = $wcemessage_id;
+						// If NEW 2.2.0 data is saved for this Order Status...
+						if ( ! empty( $wcemessage_id_currentstatus ) ) {
+							$hidden_field_val = $wcemessage_id_currentstatus;
+						}
+						if ( ( 'woocommerce_order_status_' . $status_slug ) === $customcontent_orderstatus ) {
+							$hidden_field_val = $wcemessage_id;
 						}
 						?>
-						<input class="wcemessage_search_field_hidden" type="hidden" name="wcemessage_id_<?php echo $statusName; ?>" id="wcemessage_id_<?php echo $statusName; ?>" value="<?php echo $hiddenFieldVal; ?>" />
+						<input class="wcemessage_search_field_hidden" type="hidden" name="wcemessage_id_<?php echo esc_attr( $status_name ); ?>" id="wcemessage_id_<?php echo esc_attr( $status_name ); ?>" value="<?php echo esc_attr( $hidden_field_val ); ?>" />
 						<?php
 					}
 
-					/*
-					* Reusable function to return a drop down menu of template locations
-					*/
-					function showLocationSelect( $statusName = '' ){
+					/**
+					 * Returns a drop down menu of template locations.
+					 *
+					 * @param string $status_name The name of the status message.
+					 * @return void
+					 */
+					function showLocationSelect( $status_name = '' ) {
 
 						$location_select_arr = array(
-							'woocommerce_email_before_order_table' => __( 'Before Order Table', 'woocommerce' ),
-							'woocommerce_email_after_order_table' => __( 'After Order Table', 'woocommerce' ),
-							'woocommerce_email_order_meta' => __( 'After Order Meta', 'woocommerce' ),
-							'woocommerce_email_customer_details' => __( 'After Customer Details', 'woocommerce' )
+							'woocommerce_email_before_order_table' => __( 'Before Order Table', 'woo_custom_emails_domain' ),
+							'woocommerce_email_after_order_table' => __( 'After Order Table', 'woo_custom_emails_domain' ),
+							'woocommerce_email_order_meta' => __( 'After Order Meta', 'woo_custom_emails_domain' ),
+							'woocommerce_email_customer_details' => __( 'After Customer Details', 'woo_custom_emails_domain' ),
 						);
 
-						if ($statusName == 'onhold'){
-							$statusSlug = 'on-hold';
+						if ( 'onhold' === $status_name ) {
+							$status_slug = 'on-hold';
 						} else {
-							$statusSlug = $statusName;
+							$status_slug = $status_name;
 						}
 
-						$currentStatusLocation = get_post_meta( get_the_ID(), 'location_'.$statusName, true );
-						$old_orderStatus = get_post_meta( get_the_ID(), 'order_status', true );
-						$old_orderLocation = get_post_meta( get_the_ID(), 'location', true );
+						$current_status_location = get_post_meta( get_the_ID(), 'location_' . $status_name, true );
+						$old_order_status        = get_post_meta( get_the_ID(), 'order_status', true );
+						$old_order_location      = get_post_meta( get_the_ID(), 'location', true );
 
-						// if NEW 2.2.0 data is saved for this Order Status
-						if ( !empty( $currentStatusLocation ) ) {
+						// If NEW 2.2.0 data is saved for this Order Status...
+						if ( ! empty( $current_status_location ) ) {
 
-							// Select with New Saved Value
+							// Show a Select menu with the new saved value.
 							woocommerce_wp_select(
 								array(
-									'id' => $statusName.'-location',
-									'label' => '',
-									'options' => $location_select_arr,
+									'id'       => $status_name . '-location',
+									'label'    => '',
+									'options'  => $location_select_arr,
 									'desc_tip' => false,
-									'value' => $currentStatusLocation	// Use new saved value
+									'value'    => $current_status_location, // Use the new saved value.
 								)
 							);
 
 						} else {
 
-							// if previous data has been saved for the current Order Status
-							if ( $old_orderStatus == ( 'woocommerce_order_status_'.$statusName ) ){
+							// If the previous data has been saved for the current Order Status...
+							if ( ( 'woocommerce_order_status_' . $status_name ) === $old_order_status ) {
 
-								// if previous data is saved for this Order Status
-								if ( !empty( $old_orderLocation ) ) {
+								// If the previous data is saved for this Order Status...
+								if ( ! empty( $old_order_location ) ) {
 
-									// Select with Old Saved Value
+									// Show a Select menu with the old saved value.
 									woocommerce_wp_select(
 										array(
-											'id' => $statusName.'-location',
-											'label' => '',
-											'options' => $location_select_arr,
+											'id'       => $status_name . '-location',
+											'label'    => '',
+											'options'  => $location_select_arr,
 											'desc_tip' => false,
-											'value' => $old_orderLocation	// Use old saved value
+											'value'    => $old_order_location, // Use the old saved value.
 										)
 									);
 								} else {
-									// Select with no Default Value
+									// Show a Select menu with no default value.
 									woocommerce_wp_select(
 										array(
-											'id' => $statusName.'-location',
-											'label' => '',
-											'options' => $location_select_arr,
+											'id'       => $status_name . '-location',
+											'label'    => '',
+											'options'  => $location_select_arr,
 											'desc_tip' => false,
 										)
 									);
 								}
-
 							} else {
-								// No data has been saved for the current Order Status
+								// No data has been saved for the current Order Status.
 
-								// Select with no Default Value
+								// Show a Select menu with no default value.
 								woocommerce_wp_select(
 									array(
-										'id' => $statusName.'-location',
-										'label' => '',
-										'options' => $location_select_arr,
+										'id'       => $status_name . '-location',
+										'label'    => '',
+										'options'  => $location_select_arr,
 										'desc_tip' => false,
 									)
 								);
 							}
-
 						}
 
 					}
@@ -336,45 +390,57 @@ class Woo_Product_Data_Admin {
 					<div class="table-row">
 						<div class="status order_status">
 							<mark class="order-status status-on-hold">
-								<span><?php echo __( 'On hold', 'woocommerce' ); ?></span>
+								<span><?php echo esc_html__( 'On hold', 'woo_custom_emails_domain' ); ?></span>
 							</mark>
 						</div>
 						<div class="message">
-							<?php showSavedMessage('onhold'); ?>
+							<?php show_saved_message( 'onhold' ); ?>
 						</div>
 						<div class="location">
-							<?php showLocationSelect('onhold'); ?>
+							<?php showLocationSelect( 'onhold' ); ?>
 						</div>
+						<?php
+						// Create a nonce.
+						wp_nonce_field( 'status_onhold_action', 'wcemessage_onhold_nonce' );
+						?>
 					</div>
 
 					<!-- // PROCESSING ***************************************************** // -->
 					<div class="table-row">
 						<div class="status order_status">
 							<mark class="order-status status-processing">
-								<span><?php echo __( 'Processing', 'woocommerce'); ?></span>
+								<span><?php echo esc_html__( 'Processing', 'woo_custom_emails_domain' ); ?></span>
 							</mark>
 						</div>
 						<div class="message">
-							<?php showSavedMessage('processing'); ?>
+							<?php show_saved_message( 'processing' ); ?>
 						</div>
 						<div class="location">
-							<?php showLocationSelect('processing'); ?>
+							<?php showLocationSelect( 'processing' ); ?>
 						</div>
+						<?php
+						// Create a nonce.
+						wp_nonce_field( 'status_processing_action', 'wcemessage_processing_nonce' );
+						?>
 					</div>
 
 					<!-- // COMPLETED ***************************************************** // -->
 					<div class="table-row">
 						<div class="status order_status">
 							<mark class="order-status status-completed">
-								<span><?php echo __( 'Completed', 'woocommerce' ); ?></span>
+								<span><?php echo esc_html__( 'Completed', 'woo_custom_emails_domain' ); ?></span>
 							</mark>
 						</div>
 						<div class="message">
-							<?php showSavedMessage('completed'); ?>
+							<?php show_saved_message( 'completed' ); ?>
 						</div>
 						<div class="location">
-							<?php showLocationSelect('completed'); ?>
+							<?php showLocationSelect( 'completed' ); ?>
 						</div>
+						<?php
+						// Create a nonce.
+						wp_nonce_field( 'status_completed_action', 'wcemessage_completed_nonce' );
+						?>
 					</div>
 
 				</div>
@@ -385,15 +451,23 @@ class Woo_Product_Data_Admin {
 		<?php
 	}
 
-	//* AJAX Fetch JS
+	/**
+	 * Outputs the AJAX Fetch JS functions.
+	 *
+	 * @return void
+	 */
 	public function ajax_wce_fetch_script() {
-	?>
+		?>
 		<script type="text/javascript">
 		function fetch_wce_posts_onhold(){
 			jQuery.ajax({
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
 				type: 'post',
-				data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_onhold').val() },
+				data: {
+					action: 'wce_data_fetch',
+					keyword: jQuery('#wcemessage_search_onhold').val(),
+					ajax_nonce: jQuery('#ajax_nonce').val(),
+				},
 				success: function(data) {
 					jQuery('#wcemessage_onhold_search_results .wcemessage_search_results_wrap').html( data );
 				}
@@ -402,9 +476,13 @@ class Woo_Product_Data_Admin {
 
 		function fetch_wce_posts_processing(){
 			jQuery.ajax({
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
 				type: 'post',
-				data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_processing').val() },
+				data: {
+					action: 'wce_data_fetch',
+					keyword: jQuery('#wcemessage_search_processing').val(),
+					ajax_nonce: jQuery('#ajax_nonce').val(),
+				},
 				success: function(data) {
 					jQuery('#wcemessage_processing_search_results .wcemessage_search_results_wrap').html( data );
 				}
@@ -413,9 +491,13 @@ class Woo_Product_Data_Admin {
 
 		function fetch_wce_posts_completed(){
 			jQuery.ajax({
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
 				type: 'post',
-				data: { action: 'wce_data_fetch', keyword: jQuery('#wcemessage_search_completed').val() },
+				data: {
+					action: 'wce_data_fetch',
+					keyword: jQuery('#wcemessage_search_completed').val(),
+					ajax_nonce: jQuery('#ajax_nonce').val(),
+				},
 				success: function(data) {
 					jQuery('#wcemessage_completed_search_results .wcemessage_search_results_wrap').html( data );
 				}
@@ -435,36 +517,6 @@ class Woo_Product_Data_Admin {
 
 			$('#wcemessage_search_completed').keyup(function () {
 				fetch_wce_posts_completed();
-			});
-
-			// Show Content button
-			$(document).on('click', '.show-oldcustomcontent', function(e){
-				// Don't jump to top of page
-				e.preventDefault();
-
-				// Hide this button
-				$(this).addClass('hide');
-
-				// Show 'Hide Content' button
-				$('.button.hide-oldcustomcontent.hide').removeClass('hide');
-
-				// Show 'Custom Content' textarea
-				$('#old-customcontent-meta.hide').removeClass('hide');
-			});
-
-			// Hide Content button
-			$(document).on('click', '.hide-oldcustomcontent', function(e){
-				// Don't jump to top of page
-				e.preventDefault();
-
-				// Hide this button
-				$(this).addClass('hide');
-
-				// Show 'Show Content' button
-				$('.button.show-oldcustomcontent.hide').removeClass('hide');
-
-				// Hide 'Custom Content' textarea
-				$('#old-customcontent-meta').addClass('hide');
 			});
 
 			/* ---------------------------- 2.2.0 --------------------------- */
@@ -576,36 +628,52 @@ class Woo_Product_Data_Admin {
 		<?php
 	}
 
-	// AJAX Fetch function.
+	/**
+	 * Runs the AJAX Fetch function.
+	 *
+	 * @return void
+	 */
 	public function wce_data_fetch() {
 
-		$search_term = esc_attr( $_POST['keyword'] );
+		if ( isset( $_POST['keyword'], $_POST['ajax_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['ajax_nonce'] ), 'ajax_nonce_action' ) ) {
+			$search_term = sanitize_text_field( wp_unslash( $_POST['keyword'] ) );
+		} else {
+			$search_term = '';
+		}
 
 		$args = array(
-			'post_type' => 'woocustomemails',
-			'post_status' => 'publish',
+			'post_type'      => 'woocustomemails',
+			'post_status'    => 'publish',
 			'posts_per_page' => -1,
-			's' => $search_term
+			's'              => $search_term,
 		);
 
-		$the_query = new WP_Query($args);
+		$the_query = new WP_Query( $args );
 
-		if( $the_query->have_posts() ) {
-			while( $the_query->have_posts() ): $the_query->the_post();
+		if ( $the_query->have_posts() ) {
+			while ( $the_query->have_posts() ) :
 
-				$thePermalink = esc_url( post_permalink() );
-				$theID = get_the_ID();
-				$theTitle = get_the_title();
+				$the_query->the_post();
+
+				$the_permalink = esc_url( get_permalink() );
+				$the_id        = get_the_ID();
+				$the_title     = get_the_title();
 				?>
-				<p><a href="#" class="wce-search-result" data-id="<?php echo $theID; ?>" data-title="<?php echo $theTitle; ?>"><?php echo $theID; ?> - <?php echo $theTitle; ?></a></p>
+				<p><a href="#" class="wce-search-result" data-id="<?php echo esc_attr( $the_id ); ?>" data-title="<?php echo esc_attr( $the_title ); ?>"><?php echo esc_attr( $the_id ); ?> - <?php echo esc_html( $the_title ); ?></a></p>
 				<?php
 			endwhile;
 			wp_reset_postdata();
 		} else {
-			$addMessagesURL = admin_url('edit.php?post_type=woocustomemails');
-			$addMessagesText = '<a href="'.$addMessagesURL.'" target="_blank" class="edit-wcemessage">'.__('Custom Email Messages','woocommerce').'</a>';
+			$add_messages_url  = admin_url( 'edit.php?post_type=woocustomemails' );
+			$add_messages_text = '<a href="' . $add_messages_url . '" target="_blank" class="edit-wcemessage">' . __( 'Custom Email Messages', 'woo_custom_emails_domain' ) . '</a>';
 			?>
-			<p class="placeholder error"><?php echo __( 'Sorry! No posts match your search. Please add some ', 'woocommerce' ) . $addMessagesText . __( ' and try again.', 'woocommerce' ) ?></p>
+			<p class="placeholder error">
+				<?php
+				echo esc_html__( 'Sorry! No posts match your search. Please add some ', 'woo_custom_emails_domain' );
+				echo wp_kses( $add_messages_text, $kses_allowed_html );
+				echo esc_html__( ' and try again.', 'woo_custom_emails_domain' );
+				?>
+			</p>
 			<?php
 		}
 
@@ -613,34 +681,47 @@ class Woo_Product_Data_Admin {
 	}
 
 
-	/** Hook callback function to save custom fields information */
+	/**
+	 * Callback function to save custom fields information.
+	 *
+	 * @param  [type] $post_id The Post ID.
+	 * @return void
+	 */
 	public function save_woo_custom_emails_tab_fields( $post_id ) {
 
-		// Save Order Status
-	    $select = $_POST['order_status'];
-	    if ( !empty( $select ) ) {
-	        update_post_meta( (int) $post_id, 'order_status', (string) esc_attr( $select ) );
-	    }
+		// ON-HOLD.
+		if ( isset( $_POST['wcemessage_id_onhold'], $_POST['wcemessage_onhold_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['wcemessage_onhold_nonce'] ), 'status_onhold_action' ) ) {
+			$msg_onhold_id = sanitize_text_field( wp_unslash( $_POST['wcemessage_id_onhold'] ) );
+		}
+		if ( isset( $_POST['onhold-location'], $_POST['wcemessage_onhold_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['wcemessage_onhold_nonce'] ), 'status_onhold_action' ) ) {
+			$msg_onhold_location = sanitize_text_field( wp_unslash( $_POST['onhold-location'] ) );
+		}
 
-		// Save 'wcemessage_id' Hidden Field
-        update_post_meta( $post_id, 'wcemessage_id', $_POST['wcemessage_id'] );
+		// PROCESSING.
+		if ( isset( $_POST['wcemessage_id_processing'], $_POST['wcemessage_processing_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['wcemessage_processing_nonce'] ), 'status_processing_action' ) ) {
+			$msg_processing_id = sanitize_text_field( wp_unslash( $_POST['wcemessage_id_processing'] ) );
+		}
+		if ( isset( $_POST['processing-location'], $_POST['wcemessage_processing_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['wcemessage_processing_nonce'] ), 'status_processing_action' ) ) {
+			$msg_processing_location = sanitize_text_field( wp_unslash( $_POST['processing-location'] ) );
+		}
 
-	    // Save Order Status
-	    $select = $_POST['location'];
-	    if ( !empty( $select ) ) {
-	        update_post_meta( $post_id, 'location', esc_attr( $select ) );
-	    }
+		// COMPLETED.
+		if ( isset( $_POST['wcemessage_id_completed'], $_POST['wcemessage_completed_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['wcemessage_completed_nonce'] ), 'status_completed_action' ) ) {
+			$msg_completed_id = sanitize_text_field( wp_unslash( $_POST['wcemessage_id_completed'] ) );
+		}
+		if ( isset( $_POST['completed-location'], $_POST['wcemessage_completed_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['wcemessage_completed_nonce'] ), 'status_completed_action' ) ) {
+			$msg_completed_location = sanitize_text_field( wp_unslash( $_POST['completed-location'] ) );
+		}
 
-		/* 2.2.0
-		********************************************************************* */
-		update_post_meta( $post_id, 'wcemessage_id_onhold', $_POST['wcemessage_id_onhold'] );
-		update_post_meta( $post_id, 'location_onhold', esc_attr( $_POST['onhold-location'] ) );
+		// Update the post meta.
+		update_post_meta( $post_id, 'wcemessage_id_onhold', $msg_onhold_id );
+		update_post_meta( $post_id, 'location_onhold', $msg_onhold_location );
 
-		update_post_meta( $post_id, 'wcemessage_id_processing', $_POST['wcemessage_id_processing'] );
-		update_post_meta( $post_id, 'location_processing', esc_attr( $_POST['processing-location'] ) );
+		update_post_meta( $post_id, 'wcemessage_id_processing', $msg_processing_id );
+		update_post_meta( $post_id, 'location_processing', $msg_processing_location );
 
-		update_post_meta( $post_id, 'wcemessage_id_completed', $_POST['wcemessage_id_completed'] );
-		update_post_meta( $post_id, 'location_completed', esc_attr( $_POST['completed-location'] ) );
+		update_post_meta( $post_id, 'wcemessage_id_completed', $msg_completed_id );
+		update_post_meta( $post_id, 'location_completed', $msg_completed_location );
 
 	}
 

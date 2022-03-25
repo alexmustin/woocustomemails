@@ -1,5 +1,11 @@
 <?php
 /**
+ * Handles output of the messages inside the WC emails.
+ *
+ * @package WooCustomEmails
+ */
+
+/**
  * Woo_Custom_Emails_Output is a class used to output the custom email message.
  */
 class Woo_Custom_Emails_Output {
@@ -117,46 +123,25 @@ class Woo_Custom_Emails_Output {
 
 		global $this_order_status_action;
 
-		if ( ! function_exists( 'log_message' ) ) {
-			/**
-			 * Debug logging.
-			 *
-			 * @param string $message The message to be logged.
-			 * @param string $log A string to determine the log type.
-			 */
-			function log_message( $message, $log = 'default' ) {
-				if ( WP_DEBUG_LOG ) {
-					$wc_logger = wc_get_logger();
-					$context = array( 'source' => $log );
-					if ( is_array( $message ) || is_object( $message ) ) {
-						$wc_logger->debug( print_r( $message, true ), $context );
-					} else {
-						$wc_logger->debug( $message, $context );
-					}
-				}
-			}
-		}
-
-		// log_message( $recipient ); // log the recipient.
-
 		// Function to output the custom message.
 		if ( ! function_exists( 'woo_custom_emails_output_message' ) ) {
 
 			/**
 			 * Inserts the custom content into the email template at the chosen location.
 			 *
-			 * @param object $order An object containing all the Order information.
-			 * @param array  $shown_messages An array of which messages have already been added to the email.
+			 * @param object  $order An object containing all the Order information.
 			 * @param boolean $sent_to_admin A boolean value if this email is sent to admin or not.
+			 * @param array   $shown_messages An array of which messages have already been added to the email.
 			 */
 			function woo_custom_emails_output_message( $order, $sent_to_admin, $shown_messages ) {
 
 				// Show content on Admin emails if setting is enabled.
 
 				$options = get_option( 'woocustomemails_settings_name' );
+
 				$show_in_admin_email_setting = isset( $options['show_in_admin_email'] ) ? $options['show_in_admin_email'] : false;
 
-				if ( false !== $show_in_admin_email_setting ) {
+				if ( false !== $show_in_admin_email_setting ) { // phpcs:ignore
 					// Setting is enabled - show the message in the Admin email.
 					// The parent function will return the message content.
 				} else {
@@ -183,8 +168,8 @@ class Woo_Custom_Emails_Output {
 					$this_product_id = $item['product_id'];
 
 					// Get this meta.
-					$orderstatus_meta = (string) get_post_meta( $this_product_id, 'order_status', true );
-					$wcemessage_id = get_post_meta( $this_product_id, 'wcemessage_id', true );
+					$orderstatus_meta      = (string) get_post_meta( $this_product_id, 'order_status', true );
+					$wcemessage_id         = get_post_meta( $this_product_id, 'wcemessage_id', true );
 					$templatelocation_meta = get_post_meta( $this_product_id, 'location', true );
 
 					/**
@@ -192,12 +177,12 @@ class Woo_Custom_Emails_Output {
 					 *
 					 * @since 2.2.0
 					 */
-					$wcemessage_id_onhold = (int) get_post_meta( $this_product_id, 'wcemessage_id_onhold', true );
-					$wcemessage_location_onhold = get_post_meta( $this_product_id, 'location_onhold', true );
-					$wcemessage_id_processing = (int) get_post_meta( $this_product_id, 'wcemessage_id_processing', true );
+					$wcemessage_id_onhold           = (int) get_post_meta( $this_product_id, 'wcemessage_id_onhold', true );
+					$wcemessage_location_onhold     = get_post_meta( $this_product_id, 'location_onhold', true );
+					$wcemessage_id_processing       = (int) get_post_meta( $this_product_id, 'wcemessage_id_processing', true );
 					$wcemessage_location_processing = get_post_meta( $this_product_id, 'location_processing', true );
-					$wcemessage_id_completed = (int) get_post_meta( $this_product_id, 'wcemessage_id_completed', true );
-					$wcemessage_location_completed = get_post_meta( $this_product_id, 'location_completed', true );
+					$wcemessage_id_completed        = (int) get_post_meta( $this_product_id, 'wcemessage_id_completed', true );
+					$wcemessage_location_completed  = get_post_meta( $this_product_id, 'location_completed', true );
 
 					// Set a var to track the current email template location.
 					$this_email_template_location = (string) current_action();
@@ -238,7 +223,7 @@ class Woo_Custom_Emails_Output {
 										$output .= '<br><br>';
 
 										// Output everything!
-										echo $output;
+										echo $output; //phpcs:ignore
 
 										// Update 'shown_emails' var.
 										$shown_messages[] = $wcemessage_id_onhold;
@@ -255,7 +240,7 @@ class Woo_Custom_Emails_Output {
 							if ( ! empty( $wcemessage_id_processing ) ) {
 
 								// If this message has not already been shown in this email...
-								if ( ! in_array( $wcemessage_id_processing, $shown_messages ) ) {
+								if ( ! in_array( $wcemessage_id_processing, $shown_messages, true ) ) {
 
 									if ( ! is_array( $shown_messages ) ) {
 										$shown_messages = array();
@@ -281,7 +266,7 @@ class Woo_Custom_Emails_Output {
 										$output .= '<br><br>';
 
 										// Output everything!
-										echo $output;
+										echo $output; //phpcs:ignore
 
 										// Update 'shown_emails' var.
 										$shown_messages[] = $wcemessage_id_processing;
@@ -298,7 +283,7 @@ class Woo_Custom_Emails_Output {
 							if ( ! empty( $wcemessage_id_completed ) ) {
 
 								// If this message has not already been shown in this email...
-								if ( ! in_array( $wcemessage_id_completed, $shown_messages ) ) {
+								if ( ! in_array( $wcemessage_id_completed, $shown_messages, true ) ) {
 
 									if ( ! is_array( $shown_messages ) ) {
 										$shown_messages = array();
@@ -324,7 +309,7 @@ class Woo_Custom_Emails_Output {
 										$output .= '<br><br>';
 
 										// Output everything!
-										echo $output;
+										echo $output; //phpcs:ignore
 
 										// Update 'shown_emails' var.
 										$shown_messages[] = $wcemessage_id_completed;
@@ -339,13 +324,13 @@ class Woo_Custom_Emails_Output {
 						if ( $wcemessage_id ) {
 
 							// If order status setting is equal to the current order status action...
-							if ( $orderstatus_meta == $this_order_status_action ) {
+							if ( $this_order_status_action === $orderstatus_meta ) {
 
 								// If this message has not already been shown in this email...
-								if ( ! in_array( $wcemessage_id, $shown_messages ) ) {
+								if ( ! in_array( $wcemessage_id, $shown_messages, true ) ) {
 
 									// If template location setting is equal to the current email template location...
-									if ( $templatelocation_meta == $this_email_template_location ) {
+									if ( $this_email_template_location === $templatelocation_meta ) {
 
 										// Show the message!
 
@@ -364,7 +349,7 @@ class Woo_Custom_Emails_Output {
 										$output .= '<br><br>';
 
 										// Output everything!
-										echo $output;
+										echo $output; //phpcs:ignore
 
 										// Update 'shown_emails' var.
 										$shown_messages[] = $wcemessage_id;
@@ -376,8 +361,7 @@ class Woo_Custom_Emails_Output {
 					}
 				}
 
-			} // woo_custom_emails_output_message()
-
+			}
 		}
 
 		// Add an action for each email template location to insert our custom message.
@@ -386,6 +370,6 @@ class Woo_Custom_Emails_Output {
 		add_action( 'woocommerce_email_order_meta', 'woo_custom_emails_output_message', 10, 3 );
 		add_action( 'woocommerce_email_customer_details', 'woo_custom_emails_output_message', 10, 3 );
 
-	} // woo_custom_emails_insert_content()
+	}
 
 }

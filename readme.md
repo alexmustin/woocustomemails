@@ -55,6 +55,9 @@ If you are having any issues, please post in the Support Forum.
 
 ## Changelog
 
+### 2.2.10 - (Mar 24, 2022)
+* UPDATE: Compatible with WordPress 5.9.2 and WooCommerce 6.3.1
+
 ### 2.2.9 - (May 2, 2021)
 * FIX: Fixes an error when saving on the WCE Settings page: "WordPress Error: Options page ___ not found in allowed options list"
 
