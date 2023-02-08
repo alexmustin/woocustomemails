@@ -1,5 +1,11 @@
 <?php
 /**
+ * Adds the Settings page and content.
+ *
+ * @package cepp4wc_domain
+ */
+
+/**
  * Custom_Emails_Per_Product_For_WC_Admin_Settings is a class for adding the Admin Settings for the plugin.
  */
 class Custom_Emails_Per_Product_For_WC_Admin_Settings {

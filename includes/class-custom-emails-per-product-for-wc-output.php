@@ -1,8 +1,8 @@
 <?php
 /**
- * Woo_Custom_Emails_Per_Product_For_WC_Output is a class used to output the custom email message.
+ * Custom_Emails_Per_Product_For_WC_Output is a class used to output the custom email message.
  */
-class Woo_Custom_Emails_Per_Product_For_WC_Output {
+class Custom_Emails_Per_Product_For_WC_Output {
 
 	// Define vars.
 
