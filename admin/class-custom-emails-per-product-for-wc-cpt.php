@@ -1,28 +1,21 @@
 <?php
 /**
- * Creates the Custom Post Type required for the plugin.
- *
- * @package WooCustomEmails
+ * Custom_Emails_Per_Product_For_WC_CPT is a class for creating the 'cepp4wp_message' Custom Post Type.
  */
-
-/**
- * Woo_Custom_Emails_Per_Product_CPT is a class for creating the 'woocustomemails' Custom Post Type.
- */
-class Woo_Custom_Emails_Per_Product_CPT {
+class Custom_Emails_Per_Product_For_WC_CPT {
 
 	/**
 	 * Creates a new custom post type.
 	 *
-	 * @since 2.0.0
 	 * @access public
 	 * @uses register_post_type()
 	 */
-	public static function new_cpt_wcemails() {
+	public static function new_cpt_cepp4wp_message() {
 
 		$cap_type = 'post';
-		$plural   = 'WC Custom Messages';
-		$single   = 'WC Custom Message';
-		$cpt_name = 'woocustomemails';
+		$plural   = 'Custom Messages';
+		$single   = 'Custom Message';
+		$cpt_name = 'cepp4wp_message';
 
 		$opts['can_export']           = true;
 		$opts['capability_type']      = $cap_type;
@@ -60,20 +53,20 @@ class Woo_Custom_Emails_Per_Product_CPT {
 
 		$opts['labels']['add_new']            = esc_html__( 'Add New Custom Message', 'woo_custom_emails_domain' );
 		$opts['labels']['add_new_item']       = esc_html__( 'Add New Custom Message', 'woo_custom_emails_domain' );
-		$opts['labels']['all_items']          = esc_html__( 'WC Custom Messages', 'woo_custom_emails_domain' );
-		$opts['labels']['edit_item']          = esc_html__( 'Edit WC Custom Message', 'woo_custom_emails_domain' );
+		$opts['labels']['all_items']          = esc_html__( 'Custom Messages', 'woo_custom_emails_domain' );
+		$opts['labels']['edit_item']          = esc_html__( 'Edit Custom Message', 'woo_custom_emails_domain' );
 		$opts['labels']['menu_name']          = esc_html__( 'Custom Emails', 'woo_custom_emails_domain' );
-		$opts['labels']['name']               = esc_html__( 'WC Custom Messages', 'woo_custom_emails_domain' );
-		$opts['labels']['name_admin_bar']     = esc_html__( 'WC Custom Message', 'woo_custom_emails_domain' );
-		$opts['labels']['new_item']           = esc_html__( 'New WC Custom Message', 'woo_custom_emails_domain' );
-		$opts['labels']['not_found']          = esc_html__( 'No WC Custom Messages Found', 'woo_custom_emails_domain' );
-		$opts['labels']['not_found_in_trash'] = esc_html__( 'No WC Custom Messages Found in Trash', 'woo_custom_emails_domain' );
-		$opts['labels']['parent_item_colon']  = esc_html__( 'Parent WC Custom Messages :', 'woo_custom_emails_domain' );
-		$opts['labels']['search_items']       = esc_html__( 'Search WC Custom Messages', 'woo_custom_emails_domain' );
-		$opts['labels']['singular_name']      = esc_html__( 'WC Custom Message', 'woo_custom_emails_domain' );
-		$opts['labels']['view_item']          = esc_html__( 'View WC Custom Message', 'woo_custom_emails_domain' );
+		$opts['labels']['name']               = esc_html__( 'Custom Messages', 'woo_custom_emails_domain' );
+		$opts['labels']['name_admin_bar']     = esc_html__( 'Custom Message', 'woo_custom_emails_domain' );
+		$opts['labels']['new_item']           = esc_html__( 'New Custom Message', 'woo_custom_emails_domain' );
+		$opts['labels']['not_found']          = esc_html__( 'No Custom Messages Found', 'woo_custom_emails_domain' );
+		$opts['labels']['not_found_in_trash'] = esc_html__( 'No Custom Messages Found in Trash', 'woo_custom_emails_domain' );
+		$opts['labels']['parent_item_colon']  = esc_html__( 'Parent Custom Messages :', 'woo_custom_emails_domain' );
+		$opts['labels']['search_items']       = esc_html__( 'Search Custom Messages', 'woo_custom_emails_domain' );
+		$opts['labels']['singular_name']      = esc_html__( 'Custom Message', 'woo_custom_emails_domain' );
+		$opts['labels']['view_item']          = esc_html__( 'View Custom Message', 'woo_custom_emails_domain' );
 
-		$opts = apply_filters( 'woocustomemails-cpt-options', $opts );
+		$opts = apply_filters( 'cepp4wp_message-cpt-options', $opts );
 
 		register_post_type( strtolower( $cpt_name ), $opts );
 
@@ -85,7 +78,7 @@ class Woo_Custom_Emails_Per_Product_CPT {
 add_action(
 	'plugins_loaded',
 	function() {
-		$wcepp_cpt = new Woo_Custom_Emails_Per_Product_CPT();
-		$wcepp_cpt->new_cpt_wcemails();
+		$cepp4wp_cpt = new Custom_Emails_Per_Product_For_WC_CPT();
+		$cepp4wp_cpt->new_cpt_cepp4wp_message();
 	}
 );

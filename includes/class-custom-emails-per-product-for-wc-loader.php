@@ -1,18 +1,12 @@
 <?php
 /**
- * Loads actions and filters for the Genesis framework.
- *
- * @package WooCustomEmails
- */
-
-/**
- * The Woo_Custom_Emails_Per_Product_Loader class is responsible for
+ * The Custom_Emails_Per_Product_For_WC_Loader class is responsible for
  * coordinating actions and filters between the core plugin and the
  * administration class.
  *
- * @package woo_custom_emails_domain\includes
+ * @package cepp4wc_domain\includes
  */
-class Woo_Custom_Emails_Per_Product_Loader {
+class Custom_Emails_Per_Product_For_WC_Loader {
 
 	// Define protected vars.
 

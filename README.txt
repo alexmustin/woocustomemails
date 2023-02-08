@@ -1,14 +1,14 @@
-=== WC Custom Emails Per Product ===
+=== Custom Emails Per Product for WooCommerce ===
 Contributors: alexmustin
 Author: alexmustin
 Author URI: https://alexmustin.com/
 Donate link: https://venmo.com/Alex-Mustin
 Tags: email, template, product, receipt, woo, woocommerce
-Requires at least: 5.4
-Tested up to: 5.9.2
+Requires at least: 6.0
+Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 2.2.10
-Version: 2.2.10
+Stable tag: 1.0.0
+Version: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
