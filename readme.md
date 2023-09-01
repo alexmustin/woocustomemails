@@ -1,4 +1,4 @@
-# WC Custom Emails Per Product
+# Custom Emails Per Product for WooCommerce
 
 > Easily add custom content for each product into the default WooCommerce receipt emails.
 
